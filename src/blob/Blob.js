@@ -26,6 +26,9 @@ Blob.prototype = {
 	canJump: true,
 	jumpSpeed: 200,
 
+	eyeLeft: null,
+	eyeRight: null,
+
 	blobCollisionGroup: null,
 
 	_construct: function(){
@@ -64,6 +67,8 @@ Blob.prototype = {
 
             var point = game.add.sprite(pointX, pointY, game.cache.getBitmapData('dot'));
             game.physics.p2.enable(point);
+            point.alpha = 0;
+            point.anchor.setTo(0.5);
             point.body.onBeginContact.add(this.pointContactListener, this);
             if(this.type == 'mama'){
             	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
@@ -81,7 +86,9 @@ Blob.prototype = {
         var centerX = this.x;
         var centerY = this.y;
         this.centerPoint = game.add.sprite(centerX, centerY, game.cache.getBitmapData('dot'));
+        this.centerPoint.anchor.setTo(0.5);
         game.physics.p2.enable(this.centerPoint);
+        this.centerPoint.alpha = 0;
         this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
         this.centerPoint.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup]);
         this.centerPoint.body.fixedRotation = true;
@@ -94,6 +101,19 @@ Blob.prototype = {
         }
 
         this._createSprings();
+
+        this.eyeLeft = game.add.sprite(this.x, this.y, 'blob-eyes');
+        this.eyeLeft.anchor.setTo(0.5);
+        this.eyeLeft.animations.add('circle-eye', [0]);
+        this.eyeLeft.animations.add('square-eye', [2]);
+        this.eyeLeft.animations.add('triangle-eye', [1]);
+       	this.eyeLeft.animations.play('circle-eye');
+        this.eyeRight = game.add.sprite(this.x, this.y, 'blob-eyes');
+        this.eyeRight.anchor.setTo(0.5);
+        this.eyeRight.animations.add('circle-eye', [0]);
+        this.eyeRight.animations.add('square-eye', [2]);
+        this.eyeRight.animations.add('triangle-eye', [1]);
+        this.eyeRight.animations.play('circle-eye');
     },
 
 	pointContactListener: function(bodyA, bodyB){
@@ -197,7 +217,7 @@ Blob.prototype = {
 
 	_idealTriangle: function(){
 		var idealPositions = [];
-		var sideLength = this.surfaceArea/10; //cheating to make the triangle's points fall on the circle
+		var sideLength = this.surfaceArea/8; //cheating to make the triangle's points fall on the circle
 
 		for(var i = 0; i < this.pointCount; i++){
 			var pointX = 0;
@@ -264,6 +284,8 @@ Blob.prototype = {
 			point.destroy();
 		}, this);
 		this.centerPoint.destroy();
+		this.eyeLeft.destroy();
+		this.eyeRight.destroy();
 
 	},
 
@@ -284,21 +306,77 @@ Blob.prototype = {
 
 		//draw some stuff
 		this.textureBmd.context.clearRect(0, 0, this.textureBmd.width, this.textureBmd.height);
-		this.springs.forEach(function(spring){
-			this.textureBmd.context.beginPath();
-			this.textureBmd.context.moveTo(spring.data.bodyA.position[0]*-20 - this.x + this.textureBmd.width/2, spring.data.bodyA.position[1]*-20 - this.y + this.textureBmd.height/2);
-            this.textureBmd.context.lineTo(spring.data.bodyB.position[0]*-20 - this.x + this.textureBmd.width/2, spring.data.bodyB.position[1]*-20 - this.y + this.textureBmd.height/2);
-            this.textureBmd.context.stroke();
-		}, this);
-		//this.textureBmd.rect(0, 0, this.textureBmd.width, this.textureBmd.height);
+		var myImage = null;
+		if(this.type == 'circle'){
+			myImage = game.cache.getImage('circle-texture');
+		}else if(this.type == 'square'){
+			myImage = game.cache.getImage('square-texture');
+		}else if(this.type == 'triangle'){
+			myImage = game.cache.getImage('triangle-texture');
+		}
+		var myBorderColor = null;
+		if(this.type == 'circle'){
+			myBorderColor = "#457a31";
+		}else if(this.type == 'square'){
+			myBorderColor = "#bfa800";
+		}else if(this.type == 'triangle'){
+			myBorderColor = "#a60d00";
+		}
+		var myShadingColor = null;
+		if(this.type == 'circle'){
+			myShadingColor = 'rgba(91, 188, 46, 0.7)';
+		}else if(this.type == 'square'){
+			myShadingColor = 'rgba(229, 204, 27, 0.7)';
+		}else if(this.type == 'triangle'){
+			myShadingColor = 'rgba(252, 103, 72, 0.7)';
+		}
+		var pattern = this.textureBmd.context.createPattern(myImage, 'repeat');
+		this.textureBmd.context.fillStyle = pattern;
+		this.textureBmd.context.beginPath();
+		this.textureBmd.context.moveTo(this.outerPoints[0].x - this.x + this.textureSprite.width/2, this.outerPoints[0].y  - this.y + this.textureSprite.height/2);
+		for(var i = 1; i <= this.outerPoints.length; i++){
+			var me = this.outerPoints[(i)%this.outerPoints.length];
+			this.textureBmd.context.lineTo(me.x - this.x + this.textureSprite.width/2, me.y - this.y + this.textureSprite.height/2);
+		}
+		this.textureBmd.context.beginPath();
+		this.textureBmd.context.moveTo(this.outerPoints[0].x - this.x + this.textureSprite.width/2, this.outerPoints[0].y  - this.y + this.textureSprite.height/2);
+		for(var i = 1; i <= this.outerPoints.length; i++){
+			var me = this.outerPoints[(i)%this.outerPoints.length];
+			this.textureBmd.context.lineTo(me.x - this.x + this.textureSprite.width/2, me.y - this.y + this.textureSprite.height/2);
+		}
+		this.textureBmd.context.closePath();
+		this.textureBmd.context.fillStyle = myShadingColor;
+		this.textureBmd.context.fill();
+		this.textureBmd.context.strokeStyle = myBorderColor;
+		this.textureBmd.context.lineWidth = 3;
+		this.textureBmd.context.stroke();
+		this.textureBmd.context.beginPath();
+		this.textureBmd.context.fillStyle = pattern;
+		
+		for(var i = 0; i <= this.outerPoints.length; i++){
+			var me = this.outerPoints[(i)%this.outerPoints.length];
+			var dXCenter = me.x - this.centerPoint.x;
+			var dYCenter = me.y - this.centerPoint.y;
+			if(i == 0){
+				this.textureBmd.context.moveTo(this.outerPoints[0].x - this.x + this.textureSprite.width/2 - dXCenter/4, this.outerPoints[0].y  - this.y + this.textureSprite.height/2 - dYCenter/4);
+			}else{
+				this.textureBmd.context.lineTo(me.x - this.x + this.textureSprite.width/2 - dXCenter/4, me.y - this.y + this.textureSprite.height/2 - dYCenter/4);
+			}
+		}
+		this.textureBmd.context.closePath();
+		this.textureBmd.context.fill();
 		this.textureBmd.dirty = true;
-
-
-
 	},
 
 	update: function(){
 		this.drawStuff();
+
+		var dX = (this.type == 'triangle' ? 15 : 25);
+		var dy = (this.type == 'triangle' ? 10 : 15);
+		this.eyeLeft.x = this.centerPoint.x - dX;
+		this.eyeLeft.y = this.centerPoint.y - dy;
+		this.eyeRight.x = this.centerPoint.x + dX;
+		this.eyeRight.y = this.centerPoint.y - dy;
 
 		//chakra bar draw
 		this.chakraBmd.context.clearRect(0, 0, this.chakraBmd.width, this.chakraBmd.height);
@@ -332,16 +410,22 @@ Blob.prototype = {
 				this._createSprings();
 				this.level.setBlockMass(50000);
 				this.chakraCount--;
+				this.eyeRight.animations.play('circle-eye');
+				this.eyeLeft.animations.play('circle-eye');
 			}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10)){
 				this.type = "square";
 				this.level.setBlockMass(15);
 				this._createSprings();
 				this.chakraCount--;
+				this.eyeRight.animations.play('square-eye');
+				this.eyeLeft.animations.play('square-eye');
 			}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10)){
 				this.type = "triangle";
 				this.level.setBlockMass(50000);
 				this._createSprings();
 				this.chakraCount--;
+				this.eyeRight.animations.play('triangle-eye');
+				this.eyeLeft.animations.play('triangle-eye');
 			}
 		}
 
@@ -359,14 +443,14 @@ Blob.prototype = {
         	waterFloatSpeed = 0;
         	//if circle, float up
         	if(this.type == 'circle'){
-        		waterFloatSpeed = -5;
+        		waterFloatSpeed = -15;
         	}else{
-        		waterFloatSpeed = -1;
+        		waterFloatSpeed = -3;
         	}
 
 	        	this.centerPoint.body.velocity.y += waterFloatSpeed;
 	       		this.outerPoints.forEach(function(point, index){
-	       			if(point.body.velocity.y > -50){ //max speed to make dive jumping non-redundant
+	       			if(point.body.velocity.y > -150){ //max speed to make dive jumping non-redundant
 	        			point.body.velocity.y += waterFloatSpeed;
 	       			}
 
@@ -377,11 +461,11 @@ Blob.prototype = {
 					var diffY = point.y - this.centerPoint.y;
 	        		if(this.type == 'triangle' && (index >= Math.floor(this.outerPoints.length/3) || index <= Math.floor(this.outerPoints.length/3)*2)){
 			    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
-			    			point.body.velocity.y += -diffY/2;
-			    			point.body.velocity.x += -diffX/2;
+			    			point.body.velocity.y += -diffY*2;
+			    			point.body.velocity.x += -diffX*2;
 			    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
-			    			point.body.velocity.y += diffY/2;
-			    			point.body.velocity.x += diffX/2;
+			    			point.body.velocity.y += diffY*2;
+			    			point.body.velocity.x += diffX*2;
 			    		}
 		    		}
 	        	}, this);
