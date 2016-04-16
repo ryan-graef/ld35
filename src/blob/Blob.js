@@ -1,7 +1,8 @@
-Blob = function(x, y, type){
+Blob = function(x, y, type, level){
 	this.x = x;
 	this.y = y;
 	this.type = type;
+	this.level = level;
 	this._construct();
 }
 
@@ -16,6 +17,9 @@ Blob.prototype = {
 
 	textureBmd: null,
 	textureSprite: null,
+
+	canJump: true,
+	jumpSpeed: 200,
 
 	_construct: function(){
 		this.springs = [];
@@ -37,6 +41,7 @@ Blob.prototype = {
 
             var point = game.add.sprite(pointX, pointY, game.cache.getBitmapData('dot'));
             game.physics.p2.enable(point);
+
             point.body.fixedRotation = true;
             //point.alpha = 0;
 
@@ -87,7 +92,7 @@ Blob.prototype = {
         	this.springs.push(game.physics.p2.createSpring(me, themThem, dThem, this.elacticity, this.dampening));
 			this.springs.push(game.physics.p2.createSpring(me, meMe, dMe, this.elacticity, this.dampening));
 
-			if(this.type == 'triangle'){
+			//if(this.type == 'triangle'){
 				for(var q = 0; q < this.outerPoints.length; q++){
 					if(i != q){
 						var me = this.outerPoints[i];
@@ -100,7 +105,7 @@ Blob.prototype = {
 						this.springs.push(game.physics.p2.createSpring(me, them, d, this.elacticity, this.dampening));
 					}
 				}
-			}
+			//}
         }
 	},
 
@@ -198,14 +203,60 @@ Blob.prototype = {
 		if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
 			this.type = "circle";
 			this._createSprings();
+			this.level.setBlockMass(50000);
 			console.log('a');
 		}else if(game.input.keyboard.isDown(Phaser.Keyboard.S)){
 			this.type = "square";
+			this.level.setBlockMass(15);
 			this._createSprings();
 		}else if(game.input.keyboard.isDown(Phaser.Keyboard.D)){
 			this.type = "triangle";
+			this.level.setBlockMass(50000);
 			this._createSprings();
 		}
+
+		if(game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.checkCanJump()){
+            this.centerPoint.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
+            this.outerPoints.forEach(function(point){
+            	point.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
+            }, this);
+        }
+
+        if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+            this.centerPoint.body.velocity.x += 20;
+        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+            this.centerPoint.body.velocity.x -= 20;
+        }
+	},
+
+	checkCanJump: function(){
+		var trueCount = 0;
+
+		if(this.type !== 'square'){
+			this.outerPoints.forEach(function(point){
+				//not going to pretend I know how this works.  From http://phaser.io/examples/v2/p2-physics/tilemap-gravity
+				//just run over every point of the soft-physics object body to determine if enough are touching to warrant
+				//an "on the ground" state and the ability to jump
+				var yAxis = p2.vec2.fromValues(0, 1);
+				var result = false;
+
+				for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++){
+	       	 		var c = game.physics.p2.world.narrowphase.contactEquations[i];
+					if (c.bodyA === point.body.data || c.bodyB === point.body.data){
+			            var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
+			            if (c.bodyA === point.body.data) d *= -1;
+			            if (d > 0.5) result = true;
+			        }
+			    }
+
+			    if(result){
+			    	trueCount++;
+			    }
+			}, this);
+		}
+
+		console.log(trueCount);
+		return trueCount > 1;
 	}
 
 	
