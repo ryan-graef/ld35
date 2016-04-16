@@ -92,7 +92,7 @@ Blob.prototype = {
         	this.springs.push(game.physics.p2.createSpring(me, themThem, dThem, this.elacticity, this.dampening));
 			this.springs.push(game.physics.p2.createSpring(me, meMe, dMe, this.elacticity, this.dampening));
 
-			//if(this.type == 'triangle'){
+			if(this.type == 'triangle'){
 				for(var q = 0; q < this.outerPoints.length; q++){
 					if(i != q){
 						var me = this.outerPoints[i];
@@ -105,7 +105,7 @@ Blob.prototype = {
 						this.springs.push(game.physics.p2.createSpring(me, them, d, this.elacticity, this.dampening));
 					}
 				}
-			//}
+			}
         }
 	},
 
@@ -215,18 +215,55 @@ Blob.prototype = {
 			this._createSprings();
 		}
 
-		if(game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.checkCanJump()){
-            this.centerPoint.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
-            this.outerPoints.forEach(function(point){
-            	point.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
-            }, this);
-        }
+        //if in water
+        if(this.isInWater()){
+        	waterFloatSpeed = 0;
+        	//if circle, float up
+        	if(this.type == 'circle'){
+        		waterFloatSpeed = -5;
+        	}
+        	//if square, sink
+        	if(this.type == 'square'){
+				waterFloatSpeed = 5;
+        	}
 
-        if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
-            this.centerPoint.body.velocity.x += 20;
-        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
-            this.centerPoint.body.velocity.x -= 20;
+        	this.centerPoint.body.velocity.y += waterFloatSpeed;
+       		this.outerPoints.forEach(function(point, index){
+        		point.body.velocity.y += waterFloatSpeed;
+
+        		if(this.type == 'triangle' && index == 0 || index == 1 || index == 11){
+	        		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
+	        			point.body.velocity.y = -50;
+	        		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
+	        			point.body.velocity.y = 50;
+	        		}
+
+	        		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+	        			point.body.velocity.x = 50;
+	        		}else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+	        			point.body.velocity.x = -50;
+	        		}
+	    		}
+        	}, this);
+        }else{
+        	if(game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.checkCanJump()){
+		        this.centerPoint.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
+		        this.outerPoints.forEach(function(point){
+		        	point.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
+		        }, this);
+        	}
+
+        	if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+	            this.centerPoint.body.velocity.x += 20;
+	        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+	            this.centerPoint.body.velocity.x -= 20;
+	        }
         }
+	},
+
+	isInWater: function(){
+		var onTile = this.level.map.getTile(Math.floor(this.x/32), Math.floor(this.y/32), this.level.layers[0]);
+		return (onTile && onTile.index == 399);
 	},
 
 	checkCanJump: function(){
