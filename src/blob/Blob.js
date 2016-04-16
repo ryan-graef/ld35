@@ -29,11 +29,7 @@ Blob.prototype = {
 	blobCollisionGroup: null,
 
 	_construct: function(){
-		this.springs = [];
-		this.outerPoints = [];
-		var spacing = 2*Math.PI/this.pointCount;
-
-		this.textureBmd = game.add.bitmapData(this.surfaceArea/4, this.surfaceArea/4);
+		this.textureBmd = game.add.bitmapData(this.surfaceArea, this.surfaceArea);
 		this.textureBmd.context.strokeStyle = "#FFFFFF";
 		this.textureBmd.context.fillStyle = "#FFFFFF";
 		this.textureSprite = game.add.sprite(0, 0, this.textureBmd);
@@ -47,8 +43,18 @@ Blob.prototype = {
         this.chakraSprite = game.add.sprite(0, 0, this.chakraBmd);
         this.chakraSprite.fixedToCamera = true;
         this.chakraCount = this.maxChakraCount;
+		this.blobCollisionGroup = game.physics.p2.createCollisionGroup();
+		this._createBlob();
+	},
 
-        this.blobCollisionGroup = game.physics.p2.createCollisionGroup();
+	_createBlob: function(){
+		this.springs = [];
+		this.outerPoints = [];
+		var spacing = 2*Math.PI/this.pointCount;
+
+		
+
+        
         game.physics.p2.updateBoundsCollisionGroup();
 
 		//arrange points into a circle
@@ -59,6 +65,12 @@ Blob.prototype = {
             var point = game.add.sprite(pointX, pointY, game.cache.getBitmapData('dot'));
             game.physics.p2.enable(point);
             point.body.onBeginContact.add(this.pointContactListener, this);
+            if(this.type == 'mama'){
+            	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
+            }else{
+            	point.body.setCollisionGroup(this.blobCollisionGroup);
+            	point.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup, this.level.waterCollisionGroup]);
+            }
 
             point.body.fixedRotation = true;
             //point.alpha = 0;
@@ -70,11 +82,19 @@ Blob.prototype = {
         var centerY = this.y;
         this.centerPoint = game.add.sprite(centerX, centerY, game.cache.getBitmapData('dot'));
         game.physics.p2.enable(this.centerPoint);
+        this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
+        this.centerPoint.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup]);
         this.centerPoint.body.fixedRotation = true;
+        if(this.type == 'mama'){
+        	this.centerPoint.body.setCollisionGroup(this.level.mamaCollisionGroup);
+        }
         //this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
+        if(this.type != 'mama'){
+        	game.camera.follow(this.centerPoint);
+        }
 
         this._createSprings();
-	},
+    },
 
 	pointContactListener: function(bodyA, bodyB){
 		if(bodyA && bodyA.sprite && bodyA.sprite.key){
@@ -101,6 +121,8 @@ Blob.prototype = {
         	var idealPositions = this._idealSquare();
         }else if(this.type == 'triangle'){
         	var idealPositions = this._idealTriangle();
+        }else if(this.type == 'mama'){
+        	var idealPositions = this._idealBigCircle();
         }else{ //circle
         	var idealPositions = this._idealCircle();
         }
@@ -217,7 +239,43 @@ Blob.prototype = {
 		return idealPositions;
 	},
 
-	update: function(){
+	_idealBigCircle: function(){
+		var idealPositions = [];
+		var spacing = 2*Math.PI/this.pointCount;
+		for(var i = 0; i < this.pointCount; i++){
+            var pointX = this.x + Math.sqrt((this.surfaceArea*16)*Math.PI)*Math.cos(spacing*i); //x component of vector: v*cos(angle)
+            var pointY = this.y + Math.sqrt((this.surfaceArea*16)*Math.PI)*Math.sin(spacing*i); //y component of vector: v*sin(angle)
+
+            var point = [pointX, pointY];
+            //point.alpha = 0;
+
+            idealPositions.push(point);
+        }
+
+		return idealPositions;
+	},
+
+	destroy: function(){
+		this.springs.forEach(function(spring){
+			game.physics.p2.removeSpring(spring);
+		}, this);
+		this.springs = [];
+		this.outerPoints.forEach(function(point){
+			point.destroy();
+		}, this);
+		this.centerPoint.destroy();
+
+	},
+
+	moveRight: function(){
+		if(this.x <= this.level.lastCheckpoint.x + game.width){
+			this.centerPoint.body.velocity.x = 80;
+		}else{
+			this.centerPoint.body.velocity.x = 0;
+		}
+	},
+
+	drawStuff: function(){
 		//center blob
 		this.x = this.centerPoint.x;
 		this.y = this.centerPoint.y;
@@ -236,6 +294,12 @@ Blob.prototype = {
 		this.textureBmd.dirty = true;
 
 
+
+	},
+
+	update: function(){
+		this.drawStuff();
+
 		//chakra bar draw
 		this.chakraBmd.context.clearRect(0, 0, this.chakraBmd.width, this.chakraBmd.height);
 		this.chakraBmd.context.beginPath();
@@ -252,6 +316,12 @@ Blob.prototype = {
 					this.chakraCount = this.maxChakraCount;
 					this.level.lastCheckpoint = checkpoint;
 				}
+			}
+		}, this);
+
+		this.level.levers.forEach(function(lever){
+			if(this.centerPoint.x >= lever.sprite.left && this.centerPoint.x <= lever.sprite.right && this.centerPoint.y >= lever.sprite.top && this.centerPoint.y <= lever.sprite.bottom){
+				lever.activate();
 			}
 		}, this);
 
@@ -273,6 +343,15 @@ Blob.prototype = {
 				this._createSprings();
 				this.chakraCount--;
 			}
+		}
+
+		//reset
+		if(game.input.keyboard.downDuration(Phaser.Keyboard.R, 10)){
+			this.chakraCount = this.maxChakraCount;
+			this.x = this.level.lastCheckpoint.x;
+			this.y = this.level.lastCheckpoint.y;
+			this.destroy();
+			this._createBlob();
 		}
 
         //if in water

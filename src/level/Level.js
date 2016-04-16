@@ -13,6 +13,15 @@ Level.prototype = {
 	checkpoints: [],
 	lastCheckpoint: null,
 
+	mapCollisionGroup: null,
+
+	blockCollisionGroup: null,
+
+	waterCollisionGroup: null,
+
+	mamaCollisionGroup: null,
+	mamaBlob: null,
+
 
 	_construct: function(){
 		this.map = game.add.tilemap('test');
@@ -20,8 +29,14 @@ Level.prototype = {
 		this.layers.push(this.map.createLayer('Tile Layer 1'));
 		game.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 		this.map.setCollisionBetween(0, 394);
+		game.physics.p2.setBoundsToWorld();
+		this.mamaCollisionGroup = game.physics.p2.createCollisionGroup();
+		this.mapCollisionGroup = game.physics.p2.createCollisionGroup();
+		this.blockCollisionGroup = game.physics.p2.createCollisionGroup();
+		this.waterCollisionGroup = game.physics.p2.createCollisionGroup();
+		game.physics.p2.updateBoundsCollisionGroup();
 
-		game.physics.p2.convertTilemap(this.map, this.layers[0]);
+
 
 		var waterTiles = [];
 		var waterStart = null;
@@ -68,6 +83,8 @@ Level.prototype = {
 								var tempSprite = game.add.sprite(tile.worldX, tile.worldY, game.cache.getBitmapData('platformTest'));
 								game.physics.p2.enable(tempSprite);
 								tempSprite.body.dynamic = false;
+								tempSprite.body.setCollisionGroup(this.blockCollisionGroup);
+								tempSprite.body.collides([this.hero.blobCollisionGroup]);
 								this.platforms.push(tempSprite);
 							}
 						}, this);
@@ -78,26 +95,46 @@ Level.prototype = {
 				if(tile.properties.checkpoint){
 					tile.alpha = 0;
 					var meTile = tile;
-					var tempSprite = game.add.sprite(tile.worldX, tile.worldY-32, game.cache.getBitmapData('checkpointTest'));
+					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY, game.cache.getBitmapData('checkpointTest'));
+					tempSprite.anchor.set(0.5);
 					this.checkpoints.push(tempSprite);
 				}
 			}
 		}
-		console.log(waterTiles);
-		waterTiles.forEach(function(waterTileSet){
-			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2]));
-		}, this);
-
-		this.blocks.push(new Block(350, 250, this));
+		
 
 		var blobCircle = new Blob(750, 75, 'circle', this);
         this.hero = blobCircle;
         game.camera.follow(this.hero.centerPoint);
         game.camera.deadzone = new Phaser.Rectangle(200, 100, 460, 440);
+
+        waterTiles.forEach(function(waterTileSet){
+			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2], this));
+		}, this);
+
+        //this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
+        this.blocks.push(new Block(350, 250, this));
+
+        var furthestLeft = this.checkpoints[0];
+        this.checkpoints.forEach(function(checkpoint){
+        	if(checkpoint.x < furthestLeft.x){
+        		furthestLeft = checkpoint;
+        	}
+        });
+        this.lastCheckpoint = furthestLeft;
+
+        var bodies = game.physics.p2.convertTilemap(this.map, this.layers[0]);
+		for(var i = 0; i < bodies.length; i++){
+			var tileBody = bodies[i];
+			tileBody.setCollisionGroup(this.mapCollisionGroup);
+			tileBody.collides([this.hero.blobCollisionGroup, this.blockCollisionGroup]);
+		}
 	},
 
 	update: function(){
 		this.hero.update();
+		//this.mamaBlob.drawStuff();
+		//this.mamaBlob.moveRight();
 
 		this.water.forEach(function(waterTil){
 			waterTil.update();

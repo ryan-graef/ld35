@@ -22,13 +22,11 @@ Lever.prototype = {
 			this.key = "plateTest";
 		}
 		this.sprite = game.add.sprite(this.x-24, this.y, game.cache.getBitmapData(this.key));
+		this.sprite.anchor.setTo(0.5);
 		
 		if(this.type == "plate"){
 			this.sprite.y += 32;
 		}
-
-		game.physics.p2.enable(this.sprite);
-		this.sprite.body.dynamic = false;
 	},
 
 	activate: function(){

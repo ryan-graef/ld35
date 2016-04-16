@@ -13,7 +13,7 @@ MainState.prototype = {
         //game.plugins.add(Phaser.Plugin.PhaserIlluminated);
 
         game.physics.startSystem(Phaser.Physics.P2JS);
-        game.physics.p2.gravity.y = 100;
+        game.physics.p2.gravity.y = 300;
         game.physics.p2.setImpactEvents(true);
         game.time.advancedTiming = true;
         

@@ -1,8 +1,9 @@
-Water = function(startX, startY, endX, endY, height){
+Water = function(startX, startY, endX, endY, height, level){
 	this.startX = startX;
 	this.startY = startY;
 	this.endX = endX;
 	this.endY = endY;
+	this.level = level;
 	this.height = height;
 
 	this._construct();
@@ -25,8 +26,11 @@ Water.prototype = {
 		for(var i = 0; i <= this.segmentCount + 1; i++){
 			var point = game.add.sprite(this.startX + (diffX/this.segmentCount)*i, this.startY, game.cache.getBitmapData('dot'));
 			point.scale.setTo(0.25);
-			point.alpha = 0;
 			game.physics.p2.enable(point);
+			point.body.setCollisionGroup(this.level.waterCollisionGroup);
+			point.body.collides([this.level.hero.blobCollisionGroup, this.level.blockCollisionGroup]);
+			point.alpha = 0;
+			
 			
 			if(i%2 == 0){
 				point.body.data.gravityScale = 0;

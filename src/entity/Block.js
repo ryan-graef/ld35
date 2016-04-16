@@ -13,6 +13,8 @@ Block.prototype = {
 		game.physics.p2.enable(this.sprite);
 		this.sprite.body.onBeginContact.add(this.pointContactListener, this);
 		this.sprite.body.mass = 150;
+		this.sprite.body.setCollisionGroup(this.level.blockCollisionGroup);
+		this.sprite.body.collides([this.level.hero.blobCollisionGroup, this.level.mapCollisionGroup, this.level.blockCollisionGroup]);
 	},
 
 	pointContactListener: function(bodyA, bodyB){
