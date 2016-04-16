@@ -9,8 +9,8 @@ Blob = function(x, y, type, level){
 Blob.prototype = {
 	pointCount: 12,
 	surfaceArea: 600,
-	elacticity: 25,
-	dampening: 1.5,
+	elacticity: 15,
+	dampening: 3,
 	outerPoints: null,
 	centerPoint: null,
 	springs: null,
@@ -41,6 +41,7 @@ Blob.prototype = {
 
             var point = game.add.sprite(pointX, pointY, game.cache.getBitmapData('dot'));
             game.physics.p2.enable(point);
+            point.body.onBeginContact.add(this.pointContactListener, this);
 
             point.body.fixedRotation = true;
             //point.alpha = 0;
@@ -55,6 +56,18 @@ Blob.prototype = {
         this.centerPoint.body.fixedRotation = true;
 
         this._createSprings();
+	},
+
+	pointContactListener: function(bodyA, bodyB){
+		if(this.type == 'circle'){
+			if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key.key == 'leverTest'){
+				this.level.levers.forEach(function(lever){
+					if(lever.sprite == bodyA.sprite){
+						lever.activate();
+					}
+				}, this);
+			}
+		}
 	},
 
 	_createSprings: function(){
@@ -326,7 +339,7 @@ Blob.prototype = {
 			}, this);
 		}
 
-		return trueCount > 1;
+		return trueCount > 0;
 	}
 
 	

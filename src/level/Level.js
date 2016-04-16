@@ -8,6 +8,8 @@ Level.prototype = {
 	layers: [],
 	blocks: [],
 	water: [],
+	levers: [],
+	platforms: [],
 
 
 	_construct: function(){
@@ -15,7 +17,7 @@ Level.prototype = {
 		this.map.addTilesetImage('tileset', 'tileset');
 		this.layers.push(this.map.createLayer('Tile Layer 1'));
 		game.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-		this.map.setCollisionBetween(0, 398);
+		this.map.setCollisionBetween(0, 395);
 
 		game.physics.p2.convertTilemap(this.map, this.layers[0]);
 
@@ -26,24 +28,63 @@ Level.prototype = {
 			for(var col = 0; col < tiles[row].length; col++){
 				var tile = tiles[row][col];
 
+				//surface of water
 				if(tile.index == 400){
-					tile.index = -1;
+					tile.alpha = 0;
 
 					if(!waterStart){
 						waterStart = tile;
 					}else if(tiles[row][col + 1] && tiles[row][col + 1].index != 400){
-						waterTiles.push([waterStart, tile]);
+						var findEndRow = row;
+						do{
+							findEndRow++;
+						}while(tiles[findEndRow] && tiles[findEndRow][col].index === 399);
+
+						
+
+						waterTiles.push([waterStart, tile, (findEndRow-1)*32]);
 						waterStart = null;
 					}
+				}
+
+				//generic "water here" tile
+				if(tile.index == 399){
+					tile.alpha = 4;
+				}
+
+				//one of many lever tiles
+				if(tile.properties.triggerType){
+					tile.alpha = 0;
+					var meTile = tile;
+					var activatesArray = JSON.parse(tile.properties.triggerActivates);
+					this.levers.push(new Lever(tile.x*32, tile.y*32, function(){
+						activatesArray.forEach(function(activates){
+							var tile = tiles[activates[1]][activates[0]];
+							if(meTile.properties.triggerType == 'block'){
+								this.blocks.push(new Block(tile.worldX, tile.worldY, this));
+							}else{
+								var tempSprite = game.add.sprite(tile.worldX, tile.worldY, game.cache.getBitmapData('platformTest'));
+								game.physics.p2.enable(tempSprite);
+								tempSprite.body.dynamic = false;
+								this.platforms.push(tempSprite);
+							}
+						}, this);
+					}, this, tile.properties.switchType));
+				}
+
+				//extendable platform
+				if(tile.index == 397){
+					tile.alpha = 0;
+					
 				}
 			}
 		}
 		console.log(waterTiles);
 		waterTiles.forEach(function(waterTileSet){
-			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY));
+			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2]));
 		}, this);
 
-		this.blocks.push(new Block(350, 250));
+		this.blocks.push(new Block(350, 250, this));
 
 		var blobCircle = new Blob(750, 75, 'circle', this);
         this.hero = blobCircle;

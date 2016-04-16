@@ -1,8 +1,9 @@
-Water = function(startX, startY, endX, endY){
+Water = function(startX, startY, endX, endY, height){
 	this.startX = startX;
 	this.startY = startY;
 	this.endX = endX;
 	this.endY = endY;
+	this.height = height;
 
 	this._construct();
 }
@@ -21,16 +22,17 @@ Water.prototype = {
 
 		
 		var lastPoint = null;
-		for(var i = 0; i < this.segmentCount; i++){
+		for(var i = 0; i <= this.segmentCount + 1; i++){
 			var point = game.add.sprite(this.startX + (diffX/this.segmentCount)*i, this.startY, game.cache.getBitmapData('dot'));
 			point.scale.setTo(0.25);
+			point.alpha = 0;
 			game.physics.p2.enable(point);
 			
 			if(i%2 == 0){
 				point.body.data.gravityScale = 0;
 			}
 
-			if(i == 0 || i == this.segmentCount -1){
+			if(i == 0 || i == this.segmentCount + 1){
 				point.body.dynamic = false;
 			}
 
@@ -49,6 +51,18 @@ Water.prototype = {
 	},
 
 	update: function(){
+		var bmd = game.cache.getBitmapData('water');
+		bmd.context.clearRect(0, 0, bmd.width, bmd.height);
+		bmd.context.beginPath();
+		bmd.context.moveTo(this.points[0].x, this.points[1].y);
+		for(var i = 1; i < this.points.length; i++){
+			bmd.context.lineTo(this.points[i].x, this.points[i].y);
+		}
+		bmd.context.lineTo(this.points[this.points.length -1].x, this.points[this.points.length -1].y + this.height);
+		bmd.context.lineTo(this.points[0].x, this.points[0].y + this.height);
+		bmd.context.closePath();
+		bmd.context.fill();
+		bmd.dirty = true;
 
 	}
 }
