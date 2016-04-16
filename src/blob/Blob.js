@@ -26,6 +26,8 @@ Blob.prototype = {
 	canJump: true,
 	jumpSpeed: 200,
 
+	blobCollisionGroup: null,
+
 	_construct: function(){
 		this.springs = [];
 		this.outerPoints = [];
@@ -45,6 +47,9 @@ Blob.prototype = {
         this.chakraSprite = game.add.sprite(0, 0, this.chakraBmd);
         this.chakraSprite.fixedToCamera = true;
         this.chakraCount = this.maxChakraCount;
+
+        this.blobCollisionGroup = game.physics.p2.createCollisionGroup();
+        game.physics.p2.updateBoundsCollisionGroup();
 
 		//arrange points into a circle
 		for(var i = 0; i < this.pointCount; i++){
@@ -66,16 +71,19 @@ Blob.prototype = {
         this.centerPoint = game.add.sprite(centerX, centerY, game.cache.getBitmapData('dot'));
         game.physics.p2.enable(this.centerPoint);
         this.centerPoint.body.fixedRotation = true;
+        //this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
 
         this._createSprings();
 	},
 
 	pointContactListener: function(bodyA, bodyB){
-		if(this.type == 'circle'){
-			if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key.key == 'leverTest'){
+		if(bodyA && bodyA.sprite && bodyA.sprite.key){
+			if(bodyA.sprite.key.key == 'leverTest'){
 				this.level.levers.forEach(function(lever){
 					if(lever.sprite == bodyA.sprite){
-						lever.activate();
+						if(this.type == "circle"){
+							lever.activate();
+						}
 					}
 				}, this);
 			}
@@ -237,6 +245,15 @@ Blob.prototype = {
 		this.chakraBmd.context.rect(25, this.chakraBmd.height-50, 350, 25);
 		this.chakraBmd.context.stroke();
 		this.chakraBmd.dirty = true;
+
+		this.level.checkpoints.forEach(function(checkpoint){
+			if(this.centerPoint.x >= checkpoint.left && this.centerPoint.x <= checkpoint.right && this.centerPoint.y >= checkpoint.top && this.centerPoint.y <= checkpoint.bottom){
+				if(this.level.lastCheckpoint != checkpoint){
+					this.chakraCount = this.maxChakraCount;
+					this.level.lastCheckpoint = checkpoint;
+				}
+			}
+		}, this);
 
 		//input
 		if(this.chakraCount > 0){

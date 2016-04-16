@@ -54,6 +54,12 @@ MainState.prototype = {
         bmdPlateTest.dirty = true;
         game.cache.addBitmapData('plateTest', bmdPlateTest);
 
+        var bmdCheckpointTest = game.add.bitmapData(32, 64);
+        bmdCheckpointTest.context.fillStyle = "#FFFFFF";
+        bmdCheckpointTest.context.fillRect(0, 0, 32, 64);
+        bmdCheckpointTest.dirty = true;
+        game.cache.addBitmapData('checkpointTest', bmdCheckpointTest);
+
         this.level = new Level();
         this.cursorKeys = game.input.keyboard.createCursorKeys();
 

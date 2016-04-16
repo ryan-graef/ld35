@@ -10,6 +10,8 @@ Level.prototype = {
 	water: [],
 	levers: [],
 	platforms: [],
+	checkpoints: [],
+	lastCheckpoint: null,
 
 
 	_construct: function(){
@@ -17,7 +19,7 @@ Level.prototype = {
 		this.map.addTilesetImage('tileset', 'tileset');
 		this.layers.push(this.map.createLayer('Tile Layer 1'));
 		game.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-		this.map.setCollisionBetween(0, 395);
+		this.map.setCollisionBetween(0, 394);
 
 		game.physics.p2.convertTilemap(this.map, this.layers[0]);
 
@@ -72,10 +74,12 @@ Level.prototype = {
 					}, this, tile.properties.switchType));
 				}
 
-				//extendable platform
-				if(tile.index == 397){
+				//checkpoint tile
+				if(tile.properties.checkpoint){
 					tile.alpha = 0;
-					
+					var meTile = tile;
+					var tempSprite = game.add.sprite(tile.worldX, tile.worldY-32, game.cache.getBitmapData('checkpointTest'));
+					this.checkpoints.push(tempSprite);
 				}
 			}
 		}
