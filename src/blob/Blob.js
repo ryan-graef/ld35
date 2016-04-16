@@ -92,7 +92,7 @@ Blob.prototype = {
         	this.springs.push(game.physics.p2.createSpring(me, themThem, dThem, this.elacticity, this.dampening));
 			this.springs.push(game.physics.p2.createSpring(me, meMe, dMe, this.elacticity, this.dampening));
 
-			if(this.type == 'triangle'){
+			//if(this.type == 'triangle'){
 				for(var q = 0; q < this.outerPoints.length; q++){
 					if(i != q){
 						var me = this.outerPoints[i];
@@ -105,7 +105,7 @@ Blob.prototype = {
 						this.springs.push(game.physics.p2.createSpring(me, them, d, this.elacticity, this.dampening));
 					}
 				}
-			}
+			//}
         }
 	},
 
@@ -142,7 +142,7 @@ Blob.prototype = {
 
 	_idealTriangle: function(){
 		var idealPositions = [];
-		var sideLength = this.surfaceArea/8; //cheating to make the triangle's points fall on the circle
+		var sideLength = this.surfaceArea/10; //cheating to make the triangle's points fall on the circle
 
 		for(var i = 0; i < this.pointCount; i++){
 			var pointX = 0;
@@ -221,44 +221,74 @@ Blob.prototype = {
         	//if circle, float up
         	if(this.type == 'circle'){
         		waterFloatSpeed = -5;
-        	}
-        	//if square, sink
-        	if(this.type == 'square'){
-				waterFloatSpeed = 5;
+        	}else{
+        		waterFloatSpeed = -1;
         	}
 
-        	this.centerPoint.body.velocity.y += waterFloatSpeed;
-       		this.outerPoints.forEach(function(point, index){
-        		point.body.velocity.y += waterFloatSpeed;
+	        	this.centerPoint.body.velocity.y += waterFloatSpeed;
+	       		this.outerPoints.forEach(function(point, index){
+	       			if(point.body.velocity.y > -50){ //max speed to make dive jumping non-redundant
+	        			point.body.velocity.y += waterFloatSpeed;
+	       			}
 
-        		if(this.type == 'triangle' && index == 0 || index == 1 || index == 11){
-	        		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
-	        			point.body.velocity.y = -50;
-	        		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
-	        			point.body.velocity.y = 50;
-	        		}
+	        		//water sluggishnesss
+	        		point.body.velocity.x -= point.body.velocity.x/60;
 
-	        		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
-	        			point.body.velocity.x = 50;
-	        		}else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
-	        			point.body.velocity.x = -50;
-	        		}
-	    		}
-        	}, this);
-        }else{
-        	if(game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.checkCanJump()){
+	        		var diffX = point.x - this.centerPoint.x;
+					var diffY = point.y - this.centerPoint.y;
+	        		if(this.type == 'triangle' && (index >= Math.floor(this.outerPoints.length/3) || index <= Math.floor(this.outerPoints.length/3)*2)){
+			    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
+			    			point.body.velocity.y += -diffY/2;
+			    			point.body.velocity.x += -diffX/2;
+			    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
+			    			point.body.velocity.y += diffY/2;
+			    			point.body.velocity.x += diffX/2;
+			    		}
+		    		}
+	        	}, this);
+
+
+        }
+
+    	if(this.type != 'triangle' || !this.isInWater()){	
+    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.checkCanJump()){
 		        this.centerPoint.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
 		        this.outerPoints.forEach(function(point){
 		        	point.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
 		        }, this);
-        	}
 
-        	if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+		        if(this.isInWater()){
+		        	this.noMoreJumpsInWater = true;
+		        }
+    		}
+	    }
+
+	    if(this.noMoreJumpsInWater && !this.isInWater()){
+	    	this.noMoreJumpsInWater = false;
+	    }
+
+        if(this.type == 'triangle'){
+			this.outerPoints.forEach(function(point, index){
+    			var diffX = point.x - this.centerPoint.x;
+				var diffY = point.y - this.centerPoint.y;
+
+				if(index != 0 && index % Math.floor(this.outerPoints.length/3) == 0){
+					if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+		    			point.body.velocity.y += diffX/4;
+		    			point.body.velocity.x += -diffY/4;
+		    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+		    			point.body.velocity.y += -diffX/4;
+		    			point.body.velocity.x += diffY/4;
+		    		}
+		    	}
+    		}, this);
+    	}else{
+    		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
 	            this.centerPoint.body.velocity.x += 20;
 	        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
 	            this.centerPoint.body.velocity.x -= 20;
 	        }
-        }
+    	}
 	},
 
 	isInWater: function(){
@@ -268,6 +298,10 @@ Blob.prototype = {
 
 	checkCanJump: function(){
 		var trueCount = 0;
+
+		if(this.type == 'circle' && this.isInWater() && !this.noMoreJumpsInWater){
+			return true;
+		}
 
 		if(this.type !== 'square'){
 			this.outerPoints.forEach(function(point){
@@ -292,7 +326,6 @@ Blob.prototype = {
 			}, this);
 		}
 
-		console.log(trueCount);
 		return trueCount > 1;
 	}
 
