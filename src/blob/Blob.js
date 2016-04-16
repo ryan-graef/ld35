@@ -18,6 +18,11 @@ Blob.prototype = {
 	textureBmd: null,
 	textureSprite: null,
 
+	chakraBmd: null,
+	chakraSprite: null,
+	chakraCount: 0,
+	maxChakraCount: 10,
+
 	canJump: true,
 	jumpSpeed: 200,
 
@@ -32,7 +37,14 @@ Blob.prototype = {
 		this.textureSprite = game.add.sprite(0, 0, this.textureBmd);
 		this.textureSprite.anchor.setTo(0.5);
 		this.textureSprite.x = this.x;
-		this.textureSprite.y = this.y;
+
+		this.chakraBmd = game.add.bitmapData(game.width, game.height);
+        this.chakraBmd.context.fillStyle = "#FF00FF";
+        this.chakraBmd.context.strokeStyle = "#FFFFFF";
+        this.chakraBmd.dirty = true;
+        this.chakraSprite = game.add.sprite(0, 0, this.chakraBmd);
+        this.chakraSprite.fixedToCamera = true;
+        this.chakraCount = this.maxChakraCount;
 
 		//arrange points into a circle
 		for(var i = 0; i < this.pointCount; i++){
@@ -198,11 +210,13 @@ Blob.prototype = {
 	},
 
 	update: function(){
+		//center blob
 		this.x = this.centerPoint.x;
 		this.y = this.centerPoint.y;
 		this.textureSprite.x = this.centerPoint.x;
 		this.textureSprite.y = this.centerPoint.y;
 
+		//draw some stuff
 		this.textureBmd.context.clearRect(0, 0, this.textureBmd.width, this.textureBmd.height);
 		this.springs.forEach(function(spring){
 			this.textureBmd.context.beginPath();
@@ -213,19 +227,35 @@ Blob.prototype = {
 		//this.textureBmd.rect(0, 0, this.textureBmd.width, this.textureBmd.height);
 		this.textureBmd.dirty = true;
 
-		if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
-			this.type = "circle";
-			this._createSprings();
-			this.level.setBlockMass(50000);
-			console.log('a');
-		}else if(game.input.keyboard.isDown(Phaser.Keyboard.S)){
-			this.type = "square";
-			this.level.setBlockMass(15);
-			this._createSprings();
-		}else if(game.input.keyboard.isDown(Phaser.Keyboard.D)){
-			this.type = "triangle";
-			this.level.setBlockMass(50000);
-			this._createSprings();
+
+		//chakra bar draw
+		this.chakraBmd.context.clearRect(0, 0, this.chakraBmd.width, this.chakraBmd.height);
+		this.chakraBmd.context.beginPath();
+		this.chakraBmd.context.rect(25, this.chakraBmd.height-50, 350*(this.chakraCount/this.maxChakraCount), 25);
+		this.chakraBmd.context.fill();
+		this.chakraBmd.context.beginPath();
+		this.chakraBmd.context.rect(25, this.chakraBmd.height-50, 350, 25);
+		this.chakraBmd.context.stroke();
+		this.chakraBmd.dirty = true;
+
+		//input
+		if(this.chakraCount > 0){
+			if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 10)){
+				this.type = "circle";
+				this._createSprings();
+				this.level.setBlockMass(50000);
+				this.chakraCount--;
+			}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10)){
+				this.type = "square";
+				this.level.setBlockMass(15);
+				this._createSprings();
+				this.chakraCount--;
+			}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10)){
+				this.type = "triangle";
+				this.level.setBlockMass(50000);
+				this._createSprings();
+				this.chakraCount--;
+			}
 		}
 
         //if in water
