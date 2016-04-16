@@ -6,8 +6,8 @@ Blob = function(x, y, type){
 }
 
 Blob.prototype = {
-	pointCount: 24,
-	surfaceArea: 1000,
+	pointCount: 12,
+	surfaceArea: 600,
 	elacticity: 25,
 	dampening: 1.5,
 	outerPoints: null,
@@ -18,8 +18,8 @@ Blob.prototype = {
 	textureSprite: null,
 
 	_construct: function(){
-		this.outerPoints = [];
 		this.springs = [];
+		this.outerPoints = [];
 		var spacing = 2*Math.PI/this.pointCount;
 
 		this.textureBmd = game.add.bitmapData(this.surfaceArea/4, this.surfaceArea/4);
@@ -37,6 +37,7 @@ Blob.prototype = {
 
             var point = game.add.sprite(pointX, pointY, game.cache.getBitmapData('dot'));
             game.physics.p2.enable(point);
+            point.body.fixedRotation = true;
             //point.alpha = 0;
 
             this.outerPoints.push(point);
@@ -45,10 +46,20 @@ Blob.prototype = {
         var centerX = this.x;
         var centerY = this.y;
         this.centerPoint = game.add.sprite(centerX, centerY, game.cache.getBitmapData('dot'));
-        this.centerPoint.scale.setTo(2);
         game.physics.p2.enable(this.centerPoint);
+        this.centerPoint.body.fixedRotation = true;
 
-        if(this.type == 'square'){
+        this._createSprings();
+	},
+
+	_createSprings: function(){
+
+		this.springs.forEach(function(spring){
+			game.physics.p2.removeSpring(spring);
+		}, this);
+		this.springs = [];
+
+		if(this.type == 'square'){
         	var idealPositions = this._idealSquare();
         }else if(this.type == 'triangle'){
         	var idealPositions = this._idealTriangle();
@@ -75,12 +86,27 @@ Blob.prototype = {
         	this.springs.push(game.physics.p2.createSpring(me, this.centerPoint, dCenter, this.elacticity, this.dampening));
         	this.springs.push(game.physics.p2.createSpring(me, themThem, dThem, this.elacticity, this.dampening));
 			this.springs.push(game.physics.p2.createSpring(me, meMe, dMe, this.elacticity, this.dampening));
+
+			if(this.type == 'triangle'){
+				for(var q = 0; q < this.outerPoints.length; q++){
+					if(i != q){
+						var me = this.outerPoints[i];
+						var them = this.outerPoints[q];
+						var idealPositionMe = idealPositions[i];
+						var idealPositionThem = idealPositions[q];
+
+						var d = Math.sqrt(Math.pow(idealPositionMe[0] - idealPositionThem[0], 2) + Math.pow(idealPositionMe[1] - idealPositionThem[1], 2), 2);
+
+						this.springs.push(game.physics.p2.createSpring(me, them, d, this.elacticity, this.dampening));
+					}
+				}
+			}
         }
 	},
 
 	_idealSquare: function(){
 		var idealPositions = [];
-		var sideLength = this.surfaceArea/8; //cheating to make the square look about the same width as the circle
+		var sideLength = this.surfaceArea/6; //cheating to make the square look about the same width as the circle
 
 		for(var i = 0; i < this.pointCount; i++){
 			var pointX = 0;
@@ -168,6 +194,18 @@ Blob.prototype = {
 		}, this);
 		//this.textureBmd.rect(0, 0, this.textureBmd.width, this.textureBmd.height);
 		this.textureBmd.dirty = true;
+
+		if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
+			this.type = "circle";
+			this._createSprings();
+			console.log('a');
+		}else if(game.input.keyboard.isDown(Phaser.Keyboard.S)){
+			this.type = "square";
+			this._createSprings();
+		}else if(game.input.keyboard.isDown(Phaser.Keyboard.D)){
+			this.type = "triangle";
+			this._createSprings();
+		}
 	}
 
 	

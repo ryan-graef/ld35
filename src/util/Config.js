@@ -3,6 +3,7 @@ Config = {
     version: "0.0.0",
     sprites: [
         //{key: "SpriteKey", imagePath: "path/to/image"}
+        {key: 'tileset', imagePath: 'res/img/tileset.png'}
     ],
     animSprites: [
         //{key: "SpriteKey", imagePath: "path/to/image", jsonPath: "path/to/json"}
@@ -10,6 +11,7 @@ Config = {
     //tilemaps are assumed to be Tiled JSON.
     tileMaps: [
         //{key: "MapKey", jsonPath: "path/to/json"}
+        {key: "test", jsonPath: "res/lvl/test.json"}
     ],
     fonts: [
         //{key: "FontKey", imagePath: "path/to/image", xmlPath: "path/to/XML"}

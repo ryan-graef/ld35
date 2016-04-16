@@ -1,8 +1,9 @@
 MainState = function(){ }
 
 MainState.prototype = {
-    blobs: [],
-    backgroundBmd: [],
+    level: null,
+    cursorKeys: null,
+    hero: null,
 
     preload: function(){
         console.log('preload main state');
@@ -13,6 +14,7 @@ MainState.prototype = {
         //game.plugins.add(Phaser.Plugin.PhaserIlluminated);
 
         game.physics.startSystem(Phaser.Physics.P2JS);
+        game.physics.p2.gravity.y = 100;
         
         var bmd = game.add.bitmapData(8, 8);
         bmd.context.fillStyle = '#FFFFFF';
@@ -20,21 +22,32 @@ MainState.prototype = {
         bmd.dirty = true;
         game.cache.addBitmapData('dot', bmd);
 
+        var bmdTileTest = game.add.bitmapData(32, 32);
+        bmdTileTest.context.fillStyle = "#FFFFFF";
+        bmdTileTest.context.fillRect(0, 0, 32, 32);
+        bmdTileTest.dirty = true;
+        game.cache.addBitmapData('tileTest', bmdTileTest);
 
-        var blobCircle = new Blob(game.world.randomX, game.world.randomY, 'cicle');
-        var blobSquare = new Blob(game.world.randomX, game.world.randomY, 'square');
-        var blobTriangle = new Blob(game.world.randomY, game.world.randomY, 'triangle');
+        this.level = new Level();
+        this.cursorKeys = game.input.keyboard.createCursorKeys();
 
-        this.blobs.push(blobCircle);
-        this.blobs.push(blobSquare);
-        this.blobs.push(blobTriangle);
 
+        var blobCircle = new Blob(75, 75, 'cicle');
+        this.hero = blobCircle;
     },
 
     update: function(){
-        this.blobs.forEach(function(blob){
-            blob.update();
-        }, this);
+        this.hero.update();
+
+        if(this.cursorKeys.up.isDown){
+            this.hero.centerPoint.body.velocity.y = -200;
+        }
+
+        if(this.cursorKeys.right.isDown){
+            this.hero.centerPoint.body.velocity.x += 20;
+        }else if(this.cursorKeys.left.isDown){
+            this.hero.centerPoint.body.velocity.x -= 20;
+        }
     },
 
     render: function(){
