@@ -52,8 +52,7 @@ Level.prototype = {
         game.camera.follow(this.hero.centerPoint);
         game.camera.deadzone = new Phaser.Rectangle(200, 100, 460, 440);
 
-
-		var waterTiles = [];
+        var waterTiles = [];
 		var waterStart = null;
 		var tiles = this.layers[0].layer.data;
 		for(var row = 0; row < tiles.length; row++){
@@ -87,10 +86,12 @@ Level.prototype = {
 					tile.alpha = 0;
 
 					var tempSprite = game.add.sprite(tile.worldX, tile.worldY+20, 'spike');
-					game.physics.p2.enable(tempSprite);
+					game.physics.p2.enable(tempSprite, true);
+					tempSprite.body.setRectangle(tempSprite.width, tempSprite.height - 8, 0, 8);
 					tempSprite.body.dynamic = false;
 					tempSprite.body.setCollisionGroup(this.spikeCollisionGroup);
 					tempSprite.body.collides([this.hero.blobCollisionGroup]);
+					this.spikes.push(tempSprite);
 				}
 
 				//collision
@@ -99,6 +100,59 @@ Level.prototype = {
 				}
 			}
 		}
+
+		var tiles = this.layers[1].layer.data;
+		for(var row = 0; row < tiles.length; row++){
+			for(var col = 0; col < tiles[row].length; col++){
+				var tile = tiles[row][col];
+				//checkpoint tile
+				if(tile.properties.checkpoint){
+					tile.alpha = 0;
+					var meTile = tile;
+					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY, game.cache.getBitmapData('checkpointTest'));
+					tempSprite.anchor.set(0.5);
+					this.checkpoints.push(tempSprite);
+				}
+			}
+		}
+
+		this.generateLevel();
+
+        waterTiles.forEach(function(waterTileSet){
+			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2], this));
+		}, this);
+
+        var bodies = game.physics.p2.convertTilemap(this.map, this.layers[0], true, false);
+		for(var i = 0; i < bodies.length; i++){
+			var tileBody = bodies[i];
+			tileBody.setRectangle(32, 28, 16, 20, 0);
+			//tileBody.debug = true;
+			tileBody.setCollisionGroup(this.mapCollisionGroup);
+			tileBody.collides([this.hero.blobCollisionGroup, this.blockCollisionGroup, this.waterCollisionGroup]);
+		}
+
+        this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
+        this.blocks.push(new Block(350, 250, this));
+
+        var furthestLeft = this.checkpoints[0];
+        this.checkpoints.forEach(function(checkpoint){
+        	if(checkpoint.x < furthestLeft.x){
+        		furthestLeft = checkpoint;
+        	}
+        });
+        this.lastCheckpoint = furthestLeft;
+	},
+
+	generateLevel: function(){
+		this.blocks.forEach(function(block){
+			block.destroy();
+		}, this);
+		this.blocks = [];
+
+		this.levers.forEach(function(lever){
+			lever.destroy();
+		}, this);
+		this.levers = [];
 
 		var tiles = this.layers[1].layer.data;
 		for(var row = 0; row < tiles.length; row++){
@@ -126,38 +180,7 @@ Level.prototype = {
 						}, this);
 					}, this, tile.properties.switchType));
 				}
-
-				//checkpoint tile
-				if(tile.properties.checkpoint){
-					tile.alpha = 0;
-					var meTile = tile;
-					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY, game.cache.getBitmapData('checkpointTest'));
-					tempSprite.anchor.set(0.5);
-					this.checkpoints.push(tempSprite);
-				}
 			}
-		}
-
-        waterTiles.forEach(function(waterTileSet){
-			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2], this));
-		}, this);
-
-        this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
-        this.blocks.push(new Block(350, 250, this));
-
-        var furthestLeft = this.checkpoints[0];
-        this.checkpoints.forEach(function(checkpoint){
-        	if(checkpoint.x < furthestLeft.x){
-        		furthestLeft = checkpoint;
-        	}
-        });
-        this.lastCheckpoint = furthestLeft;
-
-        var bodies = game.physics.p2.convertTilemap(this.map, this.layers[0]);
-		for(var i = 0; i < bodies.length; i++){
-			var tileBody = bodies[i];
-			tileBody.setCollisionGroup(this.mapCollisionGroup);
-			tileBody.collides([this.hero.blobCollisionGroup, this.blockCollisionGroup, this.waterCollisionGroup]);
 		}
 	},
 

@@ -255,6 +255,8 @@ Blob.prototype = {
 		this.destroy();
 		this._createBlob();
 		this.alive = true;
+
+		this.level.generateLevel();
 	},
 
 	_idealTriangle: function(){
@@ -466,7 +468,7 @@ Blob.prototype = {
 
 			//input
 			if(this.chakraCount > 0){
-				if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 10)){
+				if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.ONE, 10)){
 					this.type = "circle";
 					this._createSprings();
 					this.level.setBlockMass(500);
@@ -474,7 +476,7 @@ Blob.prototype = {
 					this.eyeRight.animations.play('circle-eye');
 					this.eyeLeft.animations.play('circle-eye');
 					transformSfx.play();
-				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10)){
+				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.TWO, 10)){
 					this.type = "square";
 					this.level.setBlockMass(5);
 					this._createSprings();
@@ -482,7 +484,7 @@ Blob.prototype = {
 					this.eyeRight.animations.play('square-eye');
 					this.eyeLeft.animations.play('square-eye');
 					transformSfx.play();
-				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10)){
+				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.THREE, 10)){
 					this.type = "triangle";
 					this.level.setBlockMass(500);
 					this._createSprings();
@@ -516,11 +518,11 @@ Blob.prototype = {
 						var diffY = point.y - this.centerPoint.y;
 		        		if(this.type == 'triangle' && (index >= Math.floor(this.outerPoints.length/3) || index <= Math.floor(this.outerPoints.length/3)*2)){
 				    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
-				    			point.body.velocity.y += -diffY*2;
-				    			point.body.velocity.x += -diffX*2;
+				    			point.body.velocity.y += -diffY*1.5;
+				    			point.body.velocity.x += -diffX*1.5;
 				    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
-				    			point.body.velocity.y += diffY*2;
-				    			point.body.velocity.x += diffX*2;
+				    			point.body.velocity.y += diffY*1.5;
+				    			point.body.velocity.x += diffX*1.5;
 				    		}
 			    		}
 		        	}, this);
@@ -590,11 +592,11 @@ Blob.prototype = {
 	    		}, this);
 	    	}else{
 	    		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
-		            this.centerPoint.body.velocity.x += 20;
+		            this.centerPoint.body.velocity.x += 40;
 						this.eyeLeft.scale.x = 1;
 						this.eyeRight.scale.x = 1;
 		        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
-		            this.centerPoint.body.velocity.x -= 20;
+		            this.centerPoint.body.velocity.x -= 40;
 		            	this.eyeLeft.scale.x = -1;
 						this.eyeRight.scale.x = -1;
 		        }

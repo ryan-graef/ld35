@@ -26,4 +26,8 @@ Block.prototype = {
 			}, this);
 		}
 	},
+
+	destroy: function(){
+		this.sprite.destroy();
+	}
 }

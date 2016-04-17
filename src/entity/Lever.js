@@ -63,5 +63,9 @@ Lever.prototype = {
 
 	update: function(){
 
+	},
+
+	destroy: function(){
+		this.sprite.destroy();
 	}
 }
