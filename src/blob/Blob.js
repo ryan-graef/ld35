@@ -113,7 +113,7 @@ Blob.prototype = {
 	            	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
 	            }else{
 	            	point.body.setCollisionGroup(this.blobCollisionGroup);
-	            	point.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup, this.level.waterCollisionGroup, this.level.spikeCollisionGroup]);
+	            	point.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup, this.level.waterCollisionGroup, this.level.spikeCollisionGroup, this.level.leverCollisionGroup]);
 	            }
 	        }
 
@@ -187,6 +187,14 @@ Blob.prototype = {
 				this.expression = 'shocked';
 
 				this.timeBeforeNormal = 50;
+			}
+
+			if(bodyA.sprite.key == "plates"){
+				this.level.levers.forEach(function(lever){
+					if(lever.sprite == bodyA.sprite){
+						lever.activate(this.type);
+					}
+				}, this);
 			}
 		}
 	},

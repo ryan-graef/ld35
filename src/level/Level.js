@@ -180,21 +180,7 @@ Level.prototype = {
 					tile.alpha = 0;
 					var meTile = tile;
 					var activatesArray = JSON.parse(tile.properties.triggerActivates);
-					this.levers.push(new Lever(tile.x*32, tile.y*32, function(){
-						activatesArray.forEach(function(activates){
-							var tile = tiles[activates[1]][activates[0]];
-							if(meTile.properties.triggerType == 'block'){
-								this.blocks.push(new Block(tile.worldX, tile.worldY, this));
-							}else{
-								var tempSprite = game.add.sprite(tile.worldX, tile.worldY, game.cache.getBitmapData('platformTest'));
-								game.physics.p2.enable(tempSprite);
-								tempSprite.body.dynamic = false;
-								tempSprite.body.setCollisionGroup(this.blockCollisionGroup);
-								tempSprite.body.collides([this.hero.blobCollisionGroup]);
-								this.platforms.push(tempSprite);
-							}
-						}, this);
-					}, this, tile.properties.switchType));
+					this.levers.push(new Lever(tile.x*32, tile.y*32, this, tile.properties.switchType, activatesArray, tile.properties.triggerType));
 				}
 			}
 		}

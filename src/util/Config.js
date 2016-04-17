@@ -24,7 +24,7 @@ Config = {
     animSprites: [
         //{key: "SpriteKey", imagePath: "path/to/image", jsonPath: "path/to/json"}
         {key: 'blob-eyes', imagePath: "res/img/blob-eyes.png", jsonPath: "res/img/blob-eyes.json"},
-        {key: 'orange-plate', imagePath: "res/img/orange-plate.png", jsonPath: "res/img/orange-plate.json"}
+        {key: 'plates', imagePath: "res/img/plates.png", jsonPath: "res/img/plates.json"}
 
     ],
     //tilemaps are assumed to be Tiled JSON.

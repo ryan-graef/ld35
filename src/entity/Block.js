@@ -18,10 +18,10 @@ Block.prototype = {
 	},
 
 	pointContactListener: function(bodyA, bodyB){
-		if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key == 'orange-plate'){
+		if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key == 'plates'){
 			this.level.levers.forEach(function(lever){
 				if(lever.sprite == bodyA.sprite){
-					lever.activate();
+					lever.activate('box');
 				}
 			}, this);
 		}
