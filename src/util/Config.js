@@ -4,6 +4,7 @@ Config = {
     sprites: [
         //{key: "SpriteKey", imagePath: "path/to/image"}
         {key: 'tileset', imagePath: 'res/img/tileset.png'},
+        {key: 'home-screen', imagePath: 'res/img/home-screen.png'},
         {key: 'menu-button', imagePath: 'res/img/menu-button.png'},
         {key: 'background', imagePath: 'res/img/background.png'},
         {key: 'spike', imagePath: 'res/img/large-spike.png'},
