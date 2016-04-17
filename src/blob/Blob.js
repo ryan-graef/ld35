@@ -39,6 +39,10 @@ Blob.prototype = {
 
 	alive: true,
 
+	expression: null,
+
+	timeBeforeNormal: 0,
+
 	_construct: function(){
 		this.textureBmd = game.add.bitmapData(this.surfaceArea, this.surfaceArea);
 		this.textureBmd.context.strokeStyle = "#FFFFFF";
@@ -46,6 +50,8 @@ Blob.prototype = {
 		this.textureSprite = game.add.sprite(0, 0, this.textureBmd);
 		this.textureSprite.anchor.setTo(0.5);
 		this.textureSprite.x = this.x;
+
+		this.expression = "normal";
 
 		this.dustPoofs = game.add.physicsGroup(Phaser.Physics.P2JS);
 
@@ -71,6 +77,7 @@ Blob.prototype = {
 
 	die: function(){
 		this.alive = false;
+		this.expression = "shocked";
 		this.removeSprings();
 	},
 
@@ -140,16 +147,28 @@ Blob.prototype = {
         if(this.type != 'mama'){
 	        this.eyeLeft = game.add.sprite(this.x, this.y, 'blob-eyes');
 	        this.eyeLeft.anchor.setTo(0.5);
-	        this.eyeLeft.animations.add('circle-eye', [0]);
-	        this.eyeLeft.animations.add('square-eye', [2]);
-	        this.eyeLeft.animations.add('triangle-eye', [1]);
-	       	this.eyeLeft.animations.play(this.type+'-eye');
+	        this.eyeLeft.animations.add('circle-eye-normal', [0]);
+	        this.eyeLeft.animations.add('square-eye-normal', [1]);
+	        this.eyeLeft.animations.add('triangle-eye-normal', [5]);
+	       	this.eyeLeft.animations.add('circle-eye-shocked', [3]);
+	        this.eyeLeft.animations.add('square-eye-shocked', [4]);
+	        this.eyeLeft.animations.add('triangle-eye-shocked', [8]);
+	        this.eyeLeft.animations.add('circle-eye-annoyed', [6]);
+	        this.eyeLeft.animations.add('square-eye-annoyed', [7]);
+	        this.eyeLeft.animations.add('triangle-eye-annoyed', [2]);
+	       	this.eyeLeft.animations.play(this.type+'-eye-normal');
 	        this.eyeRight = game.add.sprite(this.x, this.y, 'blob-eyes');
 	        this.eyeRight.anchor.setTo(0.5);
-	        this.eyeRight.animations.add('circle-eye', [0]);
-	        this.eyeRight.animations.add('square-eye', [2]);
-	        this.eyeRight.animations.add('triangle-eye', [1]);
-	        this.eyeRight.animations.play(this.type+'-eye');
+	        this.eyeRight.animations.add('circle-eye-normal', [0]);
+	        this.eyeRight.animations.add('square-eye-normal', [1]);
+	        this.eyeRight.animations.add('triangle-eye-normal', [5]);
+	        this.eyeRight.animations.add('circle-eye-shocked', [3]);
+	        this.eyeRight.animations.add('square-eye-shocked', [4]);
+	        this.eyeRight.animations.add('triangle-eye-shocked', [8]);
+	        this.eyeRight.animations.add('circle-eye-annoyed', [6]);
+	        this.eyeRight.animations.add('square-eye-annoyed', [7]);
+	        this.eyeRight.animations.add('triangle-eye-annoyed', [2]);
+	        this.eyeRight.animations.play(this.type+'-eye-normal');
 	    }else{
 	    	this.eyeLeft = game.add.sprite(this.x, this.y, 'big-eye');
 	        this.eyeLeft.anchor.setTo(0.5);
@@ -159,8 +178,16 @@ Blob.prototype = {
     },
 
 	pointContactListener: function(bodyA, bodyB){
-		if(bodyA && bodyA.sprite && bodyA.sprite.key == 'spike' && this.type != "square"){
-			this.die();
+		if(bodyA && bodyA.sprite){
+			if(bodyA.sprite.key == "spike" && this.type != "square"){
+				this.die();
+			}
+
+			if(bodyA.sprite.key && bodyA.sprite.key.key == "blockTest" && this.type == "square"){
+				this.expression = 'shocked';
+
+				this.timeBeforeNormal = 50;
+			}
 		}
 	},
 
@@ -255,6 +282,7 @@ Blob.prototype = {
 		this.destroy();
 		this._createBlob();
 		this.alive = true;
+		this.expression = "normal";
 
 		this.level.generateLevel();
 	},
@@ -435,6 +463,13 @@ Blob.prototype = {
 	update: function(){
 		this.drawStuff();
 
+		if(this.timeBeforeNormal > 0){
+			this.timeBeforeNormal--;
+			if(this.timeBeforeNormal == 1){
+				this.expression = "normal";
+			}
+		}
+
 		if(this.level){
 			var chakraImage = game.cache.getImage('chakra-full');
 			this.chakraCropBmd.context.clearRect(0, 0, this.chakraCropBmd.width, this.chakraCropBmd.height);
@@ -446,6 +481,17 @@ Blob.prototype = {
 		//reset
 		if(game.input.keyboard.downDuration(Phaser.Keyboard.R, 10)){
 			this.reset();
+		}
+
+		if(this.type != "mama"){
+			this.eyeRight.animations.play(this.type+'-eye-'+this.expression);
+			this.eyeLeft.animations.play(this.type+'-eye-'+this.expression);
+
+			if(this.type == 'triangle' && this.expression == 'normal'){
+				this.eyeRight.scale.x = -1;
+			}else if(this.type != 'circle'){
+				this.eyeRight.scale.x = 1;
+			}
 		}
 
 		if(this.alive && this.level){
@@ -473,24 +519,18 @@ Blob.prototype = {
 					this._createSprings();
 					this.level.setBlockMass(500);
 					this.chakraCount--;
-					this.eyeRight.animations.play('circle-eye');
-					this.eyeLeft.animations.play('circle-eye');
 					transformSfx.play();
 				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.TWO, 10)){
 					this.type = "square";
 					this.level.setBlockMass(5);
 					this._createSprings();
 					this.chakraCount--;
-					this.eyeRight.animations.play('square-eye');
-					this.eyeLeft.animations.play('square-eye');
 					transformSfx.play();
 				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.THREE, 10)){
 					this.type = "triangle";
 					this.level.setBlockMass(500);
 					this._createSprings();
 					this.chakraCount--;
-					this.eyeRight.animations.play('triangle-eye');
-					this.eyeLeft.animations.play('triangle-eye');
 					transformSfx.play();
 				}
 			}
@@ -527,7 +567,22 @@ Blob.prototype = {
 			    		}
 		        	}, this);
 
-
+	       		if(!this.justEnteredWater){
+	       			this.justEnteredWater = true 
+	       			this.expression = "annoyed";
+	       			bgmMuffled.volume = 1;
+	       			bgm.volume = 0;
+	       		}else{
+	       			this.justLeftWater = false;
+	       		}
+	        }else{
+        		if(!this.justLeftWater){
+        			this.justLeftWater = true;
+        			bgmMuffled.volume = 0;
+        			bgm.volume = 1;
+     			}else{
+        			this.justEnteredWater = false;
+        		}
 	        }
 
 	    	if(this.type != 'triangle' || !this.isInWater()){	
@@ -549,6 +604,7 @@ Blob.prototype = {
 		    if(this.canPlayLand && this.checkCanJump() && this.centerPoint.body.velocity.y > 0 && !this.isInWater()){
 		    	landSfx.play();
 		    	this.canPlayLand = false;
+		    	this.expression = "normal";
 		    	var x = this.x;
 				var y = this.y + 40;
 

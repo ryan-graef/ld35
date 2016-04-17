@@ -4,6 +4,8 @@ Config = {
     sprites: [
         //{key: "SpriteKey", imagePath: "path/to/image"}
         {key: 'tileset', imagePath: 'res/img/tileset.png'},
+        {key: 'volume-on', imagePath: 'res/img/volume-on.png'},
+        {key: 'volume-off', imagePath: 'res/img/volume-off.png'},
         {key: 'home-screen', imagePath: 'res/img/home-screen.png'},
         {key: 'menu-button', imagePath: 'res/img/menu-button.png'},
         {key: 'background', imagePath: 'res/img/background.png'},
@@ -42,11 +44,13 @@ Config = {
         {key: 'splash', filePath: 'res/sfx/splash.wav'},
         {key: 'transform', filePath: 'res/sfx/transform.wav'},
         {key: 'jump', filePath: 'res/sfx/jump.wav'},
-        {key: 'land', filePath: 'res/sfx/land.wav'}
+        {key: 'land', filePath: 'res/sfx/land.wav'},
+        {key: 'bmg-muffled', filePath: "res/sfx/bgm-muffled.ogg"}
     ],
     //music loops by default
     music: [
         //{key: "MusicKey", filePath: "path/to/audiofile"}
-        {key: 'bgm', filePath: "res/sfx/bgm.ogg"}
+        {key: 'bgm', filePath: "res/sfx/bgm.ogg"},
+
     ]
 }

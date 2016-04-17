@@ -1,22 +1,64 @@
 {"frames":[
 
 {
-	"filename": "circle-eye00",
+	"filename": "circle-eye-normal00",
 	"frame": {"x": 0, "y": 0, "w":32, "h":32},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},
 	"sourceSize": {"w":32, "h":32}
 },{
-	"filename": "square-eye01",
+	"filename": "square-eye-normal01",
 	"frame": {"x": 32, "y": 0, "w":32, "h":32},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},
 	"sourceSize": {"w":32, "h":32}
 },{
-	"filename": "triangle-eye02",
+	"filename": "triangle-eye-normal02",
 	"frame": {"x": 64, "y": 0, "w":32, "h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},
+	"sourceSize": {"w":32, "h":32}
+},{
+	"filename": "circle-eye-shocked03",
+	"frame": {"x": 0, "y": 32, "w":32, "h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},
+	"sourceSize": {"w":32, "h":32}
+},{
+	"filename": "square-eye-shocked04",
+	"frame": {"x": 32, "y": 32, "w":32, "h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},
+	"sourceSize": {"w":32, "h":32}
+},{
+	"filename": "triangle-eye-shocked05",
+	"frame": {"x": 64, "y": 32, "w":32, "h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},
+	"sourceSize": {"w":32, "h":32}
+},{
+	"filename": "circle-eye-annoyed06",
+	"frame": {"x": 0, "y": 64, "w":32, "h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},
+	"sourceSize": {"w":32, "h":32}
+},{
+	"filename": "square-eye-annoyed07",
+	"frame": {"x": 32, "y": 64, "w":32, "h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},
+	"sourceSize": {"w":32, "h":32}
+},{
+	"filename": "triangle-eye-annoyed08",
+	"frame": {"x": 64, "y": 64, "w":32, "h":32},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":32},

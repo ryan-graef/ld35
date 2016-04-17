@@ -7,6 +7,7 @@ MenuState.prototype = {
 
     create: function(){
         bgm = game.add.audio('bgm');
+        bgmMuffled = game.add.audio('bgm-muffled');
         bgm.loop = true;
        //bgm.play();
 
@@ -21,30 +22,11 @@ MenuState.prototype = {
         landSfx = game.add.audio('land');
         landSfx.volume = 0.4;
 
-        //bgm.play();
+        bgm.play();
 
         this.backgroundSprite = game.add.sprite(-100, 0, 'background');
         this.backgroundSprite.scale.setTo(0.7);
         this.homeScreenSprite = game.add.sprite(0, 0, 'home-screen');
-        // game.physics.startSystem(Phaser.Physics.P2JS);
-        // game.physics.p2.gravity.y = 0;
-
-        // this.map = game.add.tilemap('title');
-        // this.map.addTilesetImage('tileset', 'tileset');
-        // this.map.createLayer('foreground');
-
-        // var bmd = game.add.bitmapData(8, 8);
-        // bmd.context.fillStyle = '#FFFFFF';
-        // bmd.context.fillRect(0, 0, 8, 8);
-        // bmd.dirty = true;
-        // game.cache.addBitmapData('dot', bmd);
-        // var bmdWater = game.add.bitmapData(10000, game.height);
-        // bmdWater.context.fillStyle = "rgba(50, 124, 173, 0.5)";
-        // bmdWater.dirty = true;
-        // game.cache.addBitmapData('water', bmdWater);
-        // var waterSprite = game.add.sprite(0, 0, bmdWater);
-
-        // this.water = new Water(12*32, 17*32, 17*32, 17*32, 4*32);
 
         this.gameTitleText = game.add.bitmapText(game.world.centerX, 100, 'font-75', Config.name, 75);
         this.gameTitleText.anchor.setTo(0.5);
@@ -56,6 +38,24 @@ MenuState.prototype = {
         this.newButtonText.events.onInputDown.add(function(){
             game.state.start('MainState');
         })
+
+        this.soundOffSprite = game.add.sprite(game.world.width - 50, 50, 'volume-off');
+        this.soundOffSprite.inputEnabled = true;
+        this.soundOffSprite.events.onInputDown.add(function(){
+                bgm.play();
+                this.soundOnSprite.bringToTop();
+                this.soundOffSprite.sendToBack();
+        }, this);
+        this.soundOffSprite.anchor.setTo(0.5);
+        this.soundOnSprite = game.add.sprite(game.width - 50, 50, 'volume-on');
+        this.soundOnSprite.anchor.setTo(0.5);
+        this.soundOnSprite.inputEnabled = true;
+        this.soundOnSprite.events.onInputDown.add(function(){
+                bgm.pause();
+                this.soundOffSprite.bringToTop();
+                this.soundOnSprite.sendToBack();
+        }, this);
+        
         
         this.helpButton = game.add.sprite(game.world.centerX + 100, 220, 'menu-button');
         this.helpButton.anchor.setTo(0.5);
