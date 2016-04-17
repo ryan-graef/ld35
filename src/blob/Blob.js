@@ -29,6 +29,9 @@ Blob.prototype = {
 	eyeLeft: null,
 	eyeRight: null,
 
+	canPlaySplash: true,
+	canPlayLand: false,
+
 	blobCollisionGroup: null,
 
 	_construct: function(){
@@ -102,18 +105,25 @@ Blob.prototype = {
 
         this._createSprings();
 
-        this.eyeLeft = game.add.sprite(this.x, this.y, 'blob-eyes');
-        this.eyeLeft.anchor.setTo(0.5);
-        this.eyeLeft.animations.add('circle-eye', [0]);
-        this.eyeLeft.animations.add('square-eye', [2]);
-        this.eyeLeft.animations.add('triangle-eye', [1]);
-       	this.eyeLeft.animations.play('circle-eye');
-        this.eyeRight = game.add.sprite(this.x, this.y, 'blob-eyes');
-        this.eyeRight.anchor.setTo(0.5);
-        this.eyeRight.animations.add('circle-eye', [0]);
-        this.eyeRight.animations.add('square-eye', [2]);
-        this.eyeRight.animations.add('triangle-eye', [1]);
-        this.eyeRight.animations.play('circle-eye');
+        if(this.type != 'mama'){
+	        this.eyeLeft = game.add.sprite(this.x, this.y, 'blob-eyes');
+	        this.eyeLeft.anchor.setTo(0.5);
+	        this.eyeLeft.animations.add('circle-eye', [0]);
+	        this.eyeLeft.animations.add('square-eye', [2]);
+	        this.eyeLeft.animations.add('triangle-eye', [1]);
+	       	this.eyeLeft.animations.play('circle-eye');
+	        this.eyeRight = game.add.sprite(this.x, this.y, 'blob-eyes');
+	        this.eyeRight.anchor.setTo(0.5);
+	        this.eyeRight.animations.add('circle-eye', [0]);
+	        this.eyeRight.animations.add('square-eye', [2]);
+	        this.eyeRight.animations.add('triangle-eye', [1]);
+	        this.eyeRight.animations.play('circle-eye');
+	    }else{
+	    	this.eyeLeft = game.add.sprite(this.x, this.y, 'big-eye');
+	        this.eyeLeft.anchor.setTo(0.5);
+	        this.eyeRight = game.add.sprite(this.x, this.y, 'big-eye');
+	        this.eyeRight.anchor.setTo(0.5);
+	    }
     },
 
 	pointContactListener: function(bodyA, bodyB){
@@ -286,6 +296,9 @@ Blob.prototype = {
 		this.centerPoint.destroy();
 		this.eyeLeft.destroy();
 		this.eyeRight.destroy();
+		this.type = "circle";
+		this.canPlaySplash = true;
+		this.canPlayLand = false;
 
 	},
 
@@ -304,6 +317,17 @@ Blob.prototype = {
 		this.textureSprite.x = this.centerPoint.x;
 		this.textureSprite.y = this.centerPoint.y;
 
+		var dX = (this.type == 'triangle' ? 15 : 25);
+		var dy = (this.type == 'triangle' ? 10 : 15);
+		if(this.type == 'mama'){
+			dX = 50;
+			dy = 50;
+		}
+		this.eyeLeft.x = this.centerPoint.x - dX;
+		this.eyeLeft.y = this.centerPoint.y - dy;
+		this.eyeRight.x = this.centerPoint.x + dX;
+		this.eyeRight.y = this.centerPoint.y - dy;
+
 		//draw some stuff
 		this.textureBmd.context.clearRect(0, 0, this.textureBmd.width, this.textureBmd.height);
 		var myImage = null;
@@ -313,6 +337,8 @@ Blob.prototype = {
 			myImage = game.cache.getImage('square-texture');
 		}else if(this.type == 'triangle'){
 			myImage = game.cache.getImage('triangle-texture');
+		}else{
+			myImage = game.cache.getImage('mamma-texture');
 		}
 		var myBorderColor = null;
 		if(this.type == 'circle'){
@@ -321,6 +347,8 @@ Blob.prototype = {
 			myBorderColor = "#bfa800";
 		}else if(this.type == 'triangle'){
 			myBorderColor = "#a60d00";
+		}else{
+			myBorderColor = '#00827f';
 		}
 		var myShadingColor = null;
 		if(this.type == 'circle'){
@@ -329,6 +357,8 @@ Blob.prototype = {
 			myShadingColor = 'rgba(229, 204, 27, 0.7)';
 		}else if(this.type == 'triangle'){
 			myShadingColor = 'rgba(252, 103, 72, 0.7)';
+		}else{
+			myShadingColor = 'rgba(0, 130, 127, 0.7)';
 		}
 		var pattern = this.textureBmd.context.createPattern(myImage, 'repeat');
 		this.textureBmd.context.fillStyle = pattern;
@@ -371,13 +401,6 @@ Blob.prototype = {
 	update: function(){
 		this.drawStuff();
 
-		var dX = (this.type == 'triangle' ? 15 : 25);
-		var dy = (this.type == 'triangle' ? 10 : 15);
-		this.eyeLeft.x = this.centerPoint.x - dX;
-		this.eyeLeft.y = this.centerPoint.y - dy;
-		this.eyeRight.x = this.centerPoint.x + dX;
-		this.eyeRight.y = this.centerPoint.y - dy;
-
 		//chakra bar draw
 		this.chakraBmd.context.clearRect(0, 0, this.chakraBmd.width, this.chakraBmd.height);
 		this.chakraBmd.context.beginPath();
@@ -408,24 +431,27 @@ Blob.prototype = {
 			if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 10)){
 				this.type = "circle";
 				this._createSprings();
-				this.level.setBlockMass(50000);
+				this.level.setBlockMass(500);
 				this.chakraCount--;
 				this.eyeRight.animations.play('circle-eye');
 				this.eyeLeft.animations.play('circle-eye');
+				transformSfx.play();
 			}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10)){
 				this.type = "square";
-				this.level.setBlockMass(15);
+				this.level.setBlockMass(5);
 				this._createSprings();
 				this.chakraCount--;
 				this.eyeRight.animations.play('square-eye');
 				this.eyeLeft.animations.play('square-eye');
+				transformSfx.play();
 			}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10)){
 				this.type = "triangle";
-				this.level.setBlockMass(50000);
+				this.level.setBlockMass(500);
 				this._createSprings();
 				this.chakraCount--;
 				this.eyeRight.animations.play('triangle-eye');
 				this.eyeLeft.animations.play('triangle-eye');
+				transformSfx.play();
 			}
 		}
 
@@ -480,14 +506,32 @@ Blob.prototype = {
 		        	point.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
 		        }, this);
 
+		        jumpSfx.play();
+		        this.canPlayLand = true;
+
 		        if(this.isInWater()){
 		        	this.noMoreJumpsInWater = true;
 		        }
     		}
 	    }
 
+	    if(this.canPlayLand && this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
+	    	landSfx.play();
+	    	this.canPlayLand = false;
+	    }else if(!this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
+	    	this.canPlayLand = true;
+	    }
+
 	    if(this.noMoreJumpsInWater && !this.isInWater()){
 	    	this.noMoreJumpsInWater = false;
+	    }
+
+	    if(this.isInWater() && this.canPlaySplash){
+	    	this.canPlaySplash = false;
+	    	splashSfx.play();
+	    }else if(!this.isInWater() && !this.canPlaySplash){
+	    	this.canPlaySplash = true;
+	    	splashSfx.play();
 	    }
 
         if(this.type == 'triangle'){
@@ -508,8 +552,12 @@ Blob.prototype = {
     	}else{
     		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
 	            this.centerPoint.body.velocity.x += 20;
+					this.eyeLeft.scale.x = 1;
+					this.eyeRight.scale.x = 1;
 	        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
 	            this.centerPoint.body.velocity.x -= 20;
+	            	this.eyeLeft.scale.x = -1;
+					this.eyeRight.scale.x = -1;
 	        }
     	}
 	},

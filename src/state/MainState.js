@@ -1,5 +1,11 @@
 MainState = function(){ }
 
+var bgm;
+var splashSfx;
+var transformSfx;
+var jumpSfx;
+var landSfx;
+
 MainState.prototype = {
     level: null,
     cursorKeys: null,
@@ -11,6 +17,21 @@ MainState.prototype = {
     create: function(){
         //remove this line if not using lighting effects
         //game.plugins.add(Phaser.Plugin.PhaserIlluminated);
+
+        bgm = game.add.audio('bgm');
+        bgm.loop = true;
+        //bgm.play();
+
+        splashSfx = game.add.audio('splash');
+        splashSfx.volume = 0.3;
+
+        transformSfx = game.add.audio('transform');
+        transformSfx.volume = 0.8;
+
+        jumpSfx = game.add.audio('jump');
+
+        landSfx = game.add.audio('land');
+        landSfx.volume = 0.4;
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.gravity.y = 300;
@@ -61,6 +82,12 @@ MainState.prototype = {
         game.cache.addBitmapData('checkpointTest', bmdCheckpointTest);
 
         this.level = new Level();
+
+        waterSprite.bringToTop();
+        this.level.mamaBlob.textureSprite.bringToTop();
+        this.level.mamaBlob.eyeLeft.bringToTop();
+        this.level.mamaBlob.eyeRight.bringToTop();
+
         this.cursorKeys = game.input.keyboard.createCursorKeys();
 
 

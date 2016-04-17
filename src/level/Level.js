@@ -112,7 +112,7 @@ Level.prototype = {
 			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2], this));
 		}, this);
 
-        //this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
+        this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
         this.blocks.push(new Block(350, 250, this));
 
         var furthestLeft = this.checkpoints[0];
@@ -133,8 +133,8 @@ Level.prototype = {
 
 	update: function(){
 		this.hero.update();
-		//this.mamaBlob.drawStuff();
-		//this.mamaBlob.moveRight();
+		this.mamaBlob.drawStuff();
+		this.mamaBlob.moveRight();
 
 		this.water.forEach(function(waterTil){
 			waterTil.update();
