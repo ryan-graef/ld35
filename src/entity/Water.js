@@ -10,14 +10,16 @@ Water = function(startX, startY, endX, endY, height, level){
 }
 
 Water.prototype = {
-	points: [],
-	springs: [],
+	points: null,
+	springs: null,
 	droplets: null,
 	length: null,
 	segmentLength: 32,
 	segmentCount: null,
 
 	_construct: function(){
+		this.points =  [];
+		this.springs =  [];
 		var diffX = Math.abs(this.startX - this.endX);
 		this.length = diffX
 		this.segmentCount = Math.ceil(this.length/this.segmentLength);

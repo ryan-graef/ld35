@@ -21,7 +21,7 @@ MenuState.prototype = {
         landSfx = game.add.audio('land');
         landSfx.volume = 0.4;
 
-        bgm.play();
+        //bgm.play();
 
         this.backgroundSprite = game.add.sprite(-100, 0, 'background');
         this.backgroundSprite.scale.setTo(0.7);
@@ -47,13 +47,18 @@ MenuState.prototype = {
 
         this.gameTitleText = game.add.bitmapText(game.world.centerX, 100, 'font-75', Config.name, 75);
         this.gameTitleText.anchor.setTo(0.5);
-        this.newButtonText = game.add.bitmapText(game.world.centerX - 100, 220, 'font-45', 'New Game', 45);
+        this.newButton = game.add.sprite(game.world.centerX - 100, 220, 'menu-button');
+        this.newButton.anchor.setTo(0.5);
+        this.newButtonText = game.add.bitmapText(game.world.centerX - 100, 220, 'font-45', 'Start', 50);
         this.newButtonText.anchor.setTo(0.5);
         this.newButtonText.inputEnabled = true;
         this.newButtonText.events.onInputDown.add(function(){
             game.state.start('MainState');
         })
-        this.helpButtonText = game.add.bitmapText(game.world.centerX + 100, 220, 'font-45', 'Help', 45);
+        
+        this.helpButton = game.add.sprite(game.world.centerX + 100, 220, 'menu-button');
+        this.helpButton.anchor.setTo(0.5);
+        this.helpButtonText = game.add.bitmapText(game.world.centerX + 100, 220, 'font-45', 'How To\n  Play', 40);
         this.helpButtonText.anchor.setTo(0.5);
         this.helpButtonText.inputEnabled = true;
         this.helpButtonText.events.onInputDown.add(function(){
