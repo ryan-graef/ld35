@@ -108,6 +108,7 @@ Blob.prototype = {
             point.alpha = 0;
             point.anchor.setTo(0.5);
             point.body.onBeginContact.add(this.pointContactListener, this);
+            point.body.onEndContact.add(this.pointEndContactListener, this);
             if(this.level){
 	            if(this.type == 'mama'){
 	            	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
@@ -183,10 +184,8 @@ Blob.prototype = {
 				this.die();
 			}
 
-			if(bodyA.sprite.key && bodyA.sprite.key.key == "blockTest" && this.type == "square"){
+			if(bodyA.sprite.key && bodyA.sprite.key == "crate"){
 				this.expression = 'shocked';
-
-				this.timeBeforeNormal = 50;
 			}
 
 			if(bodyA.sprite.key == "plates"){
@@ -196,6 +195,12 @@ Blob.prototype = {
 					}
 				}, this);
 			}
+		}
+	},
+
+	pointEndContactListener: function(bodyA, bodyB){
+		if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key == "crate"){
+				this.expression = 'normal';
 		}
 	},
 

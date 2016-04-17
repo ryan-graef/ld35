@@ -9,7 +9,7 @@ Block.prototype = {
 	sprite: null,
 
 	_construct: function(){
-		this.sprite = game.add.sprite(this.x, this.y, game.cache.getBitmapData('blockTest'));
+		this.sprite = game.add.sprite(this.x, this.y, 'crate');
 		game.physics.p2.enable(this.sprite);
 		this.sprite.body.onBeginContact.add(this.pointContactListener, this);
 		this.sprite.body.mass = 150;

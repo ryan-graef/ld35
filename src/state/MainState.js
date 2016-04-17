@@ -51,12 +51,6 @@ MainState.prototype = {
         bmd.dirty = true;
         game.cache.addBitmapData('dot', bmd);
 
-        var bmdCrateTest = game.add.bitmapData(64, 64);
-        bmdCrateTest.context.fillStyle = "#FFFFFF";
-        bmdCrateTest.context.fillRect(0, 0, 64, 64);
-        bmdCrateTest.dirty = true;
-        game.cache.addBitmapData('blockTest', bmdCrateTest);
-
         var bmdTextBoxTest = game.add.bitmapData(400, 100);
         bmdTextBoxTest.context.fillStyle = "#FaaaaF";
         bmdTextBoxTest.context.fillRect(0, 0, bmdTextBoxTest.width, bmdTextBoxTest.height);
