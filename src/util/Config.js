@@ -4,6 +4,7 @@ Config = {
     sprites: [
         //{key: "SpriteKey", imagePath: "path/to/image"}
         {key: 'tileset', imagePath: 'res/img/tileset.png'},
+        {key: 'spike', imagePath: 'res/img/large-spike.png'},
         {key: 'big-eye', imagePath: 'res/img/big-blob-eye.png'},
         {key: 'chakra-empty', imagePath: 'res/img/chakra-empty.png'},
         {key: 'chakra-full', imagePath: 'res/img/chakra-full.png'},

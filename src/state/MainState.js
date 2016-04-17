@@ -20,7 +20,7 @@ MainState.prototype = {
 
         bgm = game.add.audio('bgm');
         bgm.loop = true;
-        //bgm.play();
+       //bgm.play();
 
         splashSfx = game.add.audio('splash');
         splashSfx.volume = 0.3;

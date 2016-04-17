@@ -47,6 +47,7 @@ Lever.prototype = {
 				this.sprite.animations.play('active');
 				this.active = true;
 				this.sprite.y += 8;
+				this.listener.call(this.context);
 			}else{
 				this.active = true;
 

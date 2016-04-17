@@ -11,6 +11,7 @@ Level.prototype = {
 	levers: [],
 	platforms: [],
 	checkpoints: [],
+	spikes: [],
 	lastCheckpoint: null,
 
 	mapCollisionGroup: null,
@@ -22,8 +23,12 @@ Level.prototype = {
 	waterCollisionGroup: null,
 
 	mamaCollisionGroup: null,
+	spikeCollisionGroup: null,
 	mamaBlob: null,
 
+	isWaterTile: function(tile){
+		return tile.index == 403 || tile.index == 404 || tile.index == 431;
+	},
 
 	_construct: function(){
 		this.map = game.add.tilemap('test');
@@ -39,8 +44,13 @@ Level.prototype = {
 		this.blockCollisionGroup = game.physics.p2.createCollisionGroup();
 		this.waterCollisionGroup = game.physics.p2.createCollisionGroup();
 		this.leverCollisionGroup = game.physics.p2.createCollisionGroup();
+		this.spikeCollisionGroup = game.physics.p2.createCollisionGroup();
 		game.physics.p2.updateBoundsCollisionGroup();
 
+		var blobCircle = new Blob(750, 75, 'circle', this);
+        this.hero = blobCircle;
+        game.camera.follow(this.hero.centerPoint);
+        game.camera.deadzone = new Phaser.Rectangle(200, 100, 460, 440);
 
 
 		var waterTiles = [];
@@ -51,14 +61,14 @@ Level.prototype = {
 				var tile = tiles[row][col];
 
 				//surface of water
-				if(tile.index == 431 && tiles[row -1] && tiles[row -1][col].index != 431){
+				if(this.isWaterTile(tile) && tiles[row -1] && !this.isWaterTile(tiles[row -1][col])){
 					if(!waterStart){
 						waterStart = tile;
-					}else if(tiles[row][col + 1] && tiles[row][col + 1].index != 431){
+					}else if(tiles[row][col + 1] && !this.isWaterTile(tiles[row][col + 1])){
 						var findEndRow = row;
 						do{
 							findEndRow++;
-						}while(tiles[findEndRow] && tiles[findEndRow][col].index === 431);
+						}while(tiles[findEndRow] && this.isWaterTile(tiles[findEndRow][col]));
 
 						
 
@@ -70,6 +80,22 @@ Level.prototype = {
 				//generic "water here" tile
 				if(tile.index == 431){
 					tile.alpha = 1;
+				}
+
+				//spike
+				if(tile.index == 407){
+					tile.alpha = 0;
+
+					var tempSprite = game.add.sprite(tile.worldX, tile.worldY+20, 'spike');
+					game.physics.p2.enable(tempSprite);
+					tempSprite.body.dynamic = false;
+					tempSprite.body.setCollisionGroup(this.spikeCollisionGroup);
+					tempSprite.body.collides([this.hero.blobCollisionGroup]);
+				}
+
+				//collision
+				if(tile.index == 432){
+					tile.alpha = 0;
 				}
 			}
 		}
@@ -111,12 +137,6 @@ Level.prototype = {
 				}
 			}
 		}
-		
-
-		var blobCircle = new Blob(750, 75, 'circle', this);
-        this.hero = blobCircle;
-        game.camera.follow(this.hero.centerPoint);
-        game.camera.deadzone = new Phaser.Rectangle(200, 100, 460, 440);
 
         waterTiles.forEach(function(waterTileSet){
 			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2], this));

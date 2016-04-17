@@ -35,6 +35,8 @@ Blob.prototype = {
 
 	blobCollisionGroup: null,
 
+	alive: true,
+
 	_construct: function(){
 		this.textureBmd = game.add.bitmapData(this.surfaceArea, this.surfaceArea);
 		this.textureBmd.context.strokeStyle = "#FFFFFF";
@@ -57,6 +59,18 @@ Blob.prototype = {
 		this.chakraCropSprite = game.add.sprite(0, 0, this.chakraCropBmd);
 		this.chakraCropSprite.fixedToCamera = true;
 		this.chakraCropSprite.bringToTop();
+	},
+
+	die: function(){
+		this.alive = false;
+		this.removeSprings();
+	},
+
+	removeSprings: function(){
+		this.springs.forEach(function(spring){
+			game.physics.p2.removeSpring(spring);
+		}, this);
+		this.springs = [];
 	},
 
 	_createBlob: function(){
@@ -83,7 +97,7 @@ Blob.prototype = {
             	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
             }else{
             	point.body.setCollisionGroup(this.blobCollisionGroup);
-            	point.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup, this.level.waterCollisionGroup]);
+            	point.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup, this.level.waterCollisionGroup, this.level.spikeCollisionGroup]);
             }
 
             point.body.fixedRotation = true;
@@ -133,15 +147,14 @@ Blob.prototype = {
     },
 
 	pointContactListener: function(bodyA, bodyB){
-
+		if(bodyA && bodyA.sprite && bodyA.sprite.key == 'spike' && this.type != "square"){
+			this.die();
+		}
 	},
 
 	_createSprings: function(){
 
-		this.springs.forEach(function(spring){
-			game.physics.p2.removeSpring(spring);
-		}, this);
-		this.springs = [];
+		this.removeSprings();
 
 		if(this.type == 'square'){
         	var idealPositions = this._idealSquare();
@@ -219,6 +232,15 @@ Blob.prototype = {
         }
 
 		return idealPositions;
+	},
+
+	reset: function(){
+		this.chakraCount = this.maxChakraCount;
+		this.x = this.level.lastCheckpoint.x;
+		this.y = this.level.lastCheckpoint.y;
+		this.destroy();
+		this._createBlob();
+		this.alive = true;
 	},
 
 	_idealTriangle: function(){
@@ -403,157 +425,155 @@ Blob.prototype = {
 		this.chakraCropBmd.dirty = true;
 		this.chakraCropSprite.bringToTop();
 
-		this.level.checkpoints.forEach(function(checkpoint){
-			if(this.centerPoint.x >= checkpoint.left && this.centerPoint.x <= checkpoint.right && this.centerPoint.y >= checkpoint.top && this.centerPoint.y <= checkpoint.bottom){
-				if(this.level.lastCheckpoint != checkpoint){
-					this.chakraCount = this.maxChakraCount;
-					this.level.lastCheckpoint = checkpoint;
-				}
-			}
-		}, this);
-
-		this.level.levers.forEach(function(lever){
-			if(this.centerPoint.x >= lever.sprite.left && this.centerPoint.x <= lever.sprite.right && this.centerPoint.y >= lever.sprite.top && this.centerPoint.y <= lever.sprite.bottom){
-				if(lever.key == 'leverTest'){
-					lever.activate();
-				}
-			}
-		}, this);
-
-		//input
-		if(this.chakraCount > 0){
-			if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 10)){
-				this.type = "circle";
-				this._createSprings();
-				this.level.setBlockMass(500);
-				this.chakraCount--;
-				this.eyeRight.animations.play('circle-eye');
-				this.eyeLeft.animations.play('circle-eye');
-				transformSfx.play();
-			}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10)){
-				this.type = "square";
-				this.level.setBlockMass(5);
-				this._createSprings();
-				this.chakraCount--;
-				this.eyeRight.animations.play('square-eye');
-				this.eyeLeft.animations.play('square-eye');
-				transformSfx.play();
-			}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10)){
-				this.type = "triangle";
-				this.level.setBlockMass(500);
-				this._createSprings();
-				this.chakraCount--;
-				this.eyeRight.animations.play('triangle-eye');
-				this.eyeLeft.animations.play('triangle-eye');
-				transformSfx.play();
-			}
-		}
-
 		//reset
 		if(game.input.keyboard.downDuration(Phaser.Keyboard.R, 10)){
-			this.chakraCount = this.maxChakraCount;
-			this.x = this.level.lastCheckpoint.x;
-			this.y = this.level.lastCheckpoint.y;
-			this.destroy();
-			this._createBlob();
+			this.reset();
 		}
 
-        //if in water
-        if(this.isInWater()){
-        	waterFloatSpeed = 0;
-        	//if circle, float up
-        	if(this.type == 'circle'){
-        		waterFloatSpeed = -15;
-        	}else{
-        		waterFloatSpeed = -3;
-        	}
+		if(this.alive){
+				this.level.checkpoints.forEach(function(checkpoint){
+				if(this.centerPoint.x >= checkpoint.left && this.centerPoint.x <= checkpoint.right && this.centerPoint.y >= checkpoint.top && this.centerPoint.y <= checkpoint.bottom){
+					if(this.level.lastCheckpoint != checkpoint){
+						this.chakraCount = this.maxChakraCount;
+						this.level.lastCheckpoint = checkpoint;
+					}
+				}
+			}, this);
 
-	        	this.centerPoint.body.velocity.y += waterFloatSpeed;
-	       		this.outerPoints.forEach(function(point, index){
-	       			if(point.body.velocity.y > -150){ //max speed to make dive jumping non-redundant
-	        			point.body.velocity.y += waterFloatSpeed;
-	       			}
+			this.level.levers.forEach(function(lever){
+				if(this.centerPoint.x >= lever.sprite.left && this.centerPoint.x <= lever.sprite.right && this.centerPoint.y >= lever.sprite.top && this.centerPoint.y <= lever.sprite.bottom){
+					if(lever.key == 'leverTest'){
+						lever.activate();
+					}
+				}
+			}, this);
 
-	        		//water sluggishnesss
-	        		point.body.velocity.x -= point.body.velocity.x/60;
+			//input
+			if(this.chakraCount > 0){
+				if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 10)){
+					this.type = "circle";
+					this._createSprings();
+					this.level.setBlockMass(500);
+					this.chakraCount--;
+					this.eyeRight.animations.play('circle-eye');
+					this.eyeLeft.animations.play('circle-eye');
+					transformSfx.play();
+				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10)){
+					this.type = "square";
+					this.level.setBlockMass(5);
+					this._createSprings();
+					this.chakraCount--;
+					this.eyeRight.animations.play('square-eye');
+					this.eyeLeft.animations.play('square-eye');
+					transformSfx.play();
+				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10)){
+					this.type = "triangle";
+					this.level.setBlockMass(500);
+					this._createSprings();
+					this.chakraCount--;
+					this.eyeRight.animations.play('triangle-eye');
+					this.eyeLeft.animations.play('triangle-eye');
+					transformSfx.play();
+				}
+			}
 
-	        		var diffX = point.x - this.centerPoint.x;
-					var diffY = point.y - this.centerPoint.y;
-	        		if(this.type == 'triangle' && (index >= Math.floor(this.outerPoints.length/3) || index <= Math.floor(this.outerPoints.length/3)*2)){
-			    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
-			    			point.body.velocity.y += -diffY*2;
-			    			point.body.velocity.x += -diffX*2;
-			    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
-			    			point.body.velocity.y += diffY*2;
-			    			point.body.velocity.x += diffX*2;
+	        //if in water
+	        if(this.isInWater()){
+	        	waterFloatSpeed = 0;
+	        	//if circle, float up
+	        	if(this.type == 'circle'){
+	        		waterFloatSpeed = -15;
+	        	}else{
+	        		waterFloatSpeed = -3;
+	        	}
+
+		        	this.centerPoint.body.velocity.y += waterFloatSpeed;
+		       		this.outerPoints.forEach(function(point, index){
+		       			if(point.body.velocity.y > -150){ //max speed to make dive jumping non-redundant
+		        			point.body.velocity.y += waterFloatSpeed;
+		       			}
+
+		        		//water sluggishnesss
+		        		point.body.velocity.x -= point.body.velocity.x/60;
+
+		        		var diffX = point.x - this.centerPoint.x;
+						var diffY = point.y - this.centerPoint.y;
+		        		if(this.type == 'triangle' && (index >= Math.floor(this.outerPoints.length/3) || index <= Math.floor(this.outerPoints.length/3)*2)){
+				    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
+				    			point.body.velocity.y += -diffY*2;
+				    			point.body.velocity.x += -diffX*2;
+				    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
+				    			point.body.velocity.y += diffY*2;
+				    			point.body.velocity.x += diffX*2;
+				    		}
 			    		}
-		    		}
-	        	}, this);
+		        	}, this);
 
 
-        }
-
-    	if(this.type != 'triangle' || !this.isInWater()){	
-    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.checkCanJump()){
-		        this.centerPoint.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
-		        this.outerPoints.forEach(function(point){
-		        	point.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
-		        }, this);
-
-		        jumpSfx.play();
-		        this.canPlayLand = true;
-
-		        if(this.isInWater()){
-		        	this.noMoreJumpsInWater = true;
-		        }
-    		}
-	    }
-
-	    if(this.canPlayLand && this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
-	    	landSfx.play();
-	    	this.canPlayLand = false;
-	    }else if(!this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
-	    	this.canPlayLand = true;
-	    }
-
-	    if(this.noMoreJumpsInWater && !this.isInWater()){
-	    	this.noMoreJumpsInWater = false;
-	    }
-
-	    if(this.isInWater() && this.canPlaySplash){
-	    	this.canPlaySplash = false;
-	    	splashSfx.play();
-	    }else if(!this.isInWater() && !this.canPlaySplash){
-	    	this.canPlaySplash = true;
-	    	splashSfx.play();
-	    }
-
-        if(this.type == 'triangle'){
-			this.outerPoints.forEach(function(point, index){
-    			var diffX = point.x - this.centerPoint.x;
-				var diffY = point.y - this.centerPoint.y;
-
-				if(index != 0 && index % Math.floor(this.outerPoints.length/3) == 0){
-					if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
-		    			point.body.velocity.y += diffX/4;
-		    			point.body.velocity.x += -diffY/4;
-		    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
-		    			point.body.velocity.y += -diffX/4;
-		    			point.body.velocity.x += diffY/4;
-		    		}
-		    	}
-    		}, this);
-    	}else{
-    		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
-	            this.centerPoint.body.velocity.x += 20;
-					this.eyeLeft.scale.x = 1;
-					this.eyeRight.scale.x = 1;
-	        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
-	            this.centerPoint.body.velocity.x -= 20;
-	            	this.eyeLeft.scale.x = -1;
-					this.eyeRight.scale.x = -1;
 	        }
-    	}
+
+	    	if(this.type != 'triangle' || !this.isInWater()){	
+	    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.checkCanJump()){
+			        this.centerPoint.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
+			        this.outerPoints.forEach(function(point){
+			        	point.body.velocity.y = (this.type === 'triangle' ? -this.jumpSpeed/2 : -this.jumpSpeed);
+			        }, this);
+
+			        jumpSfx.play();
+			        this.canPlayLand = true;
+
+			        if(this.isInWater()){
+			        	this.noMoreJumpsInWater = true;
+			        }
+	    		}
+		    }
+
+		    if(this.canPlayLand && this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
+		    	landSfx.play();
+		    	this.canPlayLand = false;
+		    }else if(!this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
+		    	this.canPlayLand = true;
+		    }
+
+		    if(this.noMoreJumpsInWater && !this.isInWater()){
+		    	this.noMoreJumpsInWater = false;
+		    }
+
+		    if(this.isInWater() && this.canPlaySplash){
+		    	this.canPlaySplash = false;
+		    	splashSfx.play();
+		    }else if(!this.isInWater() && !this.canPlaySplash){
+		    	this.canPlaySplash = true;
+		    	splashSfx.play();
+		    }
+
+	        if(this.type == 'triangle'){
+				this.outerPoints.forEach(function(point, index){
+	    			var diffX = point.x - this.centerPoint.x;
+					var diffY = point.y - this.centerPoint.y;
+
+					if(index != 0 && index % Math.floor(this.outerPoints.length/3) == 0){
+						if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+			    			point.body.velocity.y += diffX/4;
+			    			point.body.velocity.x += -diffY/4;
+			    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+			    			point.body.velocity.y += -diffX/4;
+			    			point.body.velocity.x += diffY/4;
+			    		}
+			    	}
+	    		}, this);
+	    	}else{
+	    		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+		            this.centerPoint.body.velocity.x += 20;
+						this.eyeLeft.scale.x = 1;
+						this.eyeRight.scale.x = 1;
+		        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+		            this.centerPoint.body.velocity.x -= 20;
+		            	this.eyeLeft.scale.x = -1;
+						this.eyeRight.scale.x = -1;
+		        }
+	    	}
+	    }
 	},
 
 	isInWater: function(){
