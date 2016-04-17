@@ -14,11 +14,11 @@ Block.prototype = {
 		this.sprite.body.onBeginContact.add(this.pointContactListener, this);
 		this.sprite.body.mass = 150;
 		this.sprite.body.setCollisionGroup(this.level.blockCollisionGroup);
-		this.sprite.body.collides([this.level.hero.blobCollisionGroup, this.level.mapCollisionGroup, this.level.blockCollisionGroup]);
+		this.sprite.body.collides([this.level.hero.blobCollisionGroup, this.level.mapCollisionGroup, this.level.blockCollisionGroup, this.level.leverCollisionGroup]);
 	},
 
 	pointContactListener: function(bodyA, bodyB){
-		if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key.key == 'plateTest'){
+		if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key == 'orange-plate'){
 			this.level.levers.forEach(function(lever){
 				if(lever.sprite == bodyA.sprite){
 					lever.activate();

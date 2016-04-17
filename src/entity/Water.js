@@ -41,7 +41,7 @@ Water.prototype = {
 			}
 
 			if(lastPoint){
-				this.springs.push(game.physics.p2.createSpring(point, lastPoint, 24, 500, 2));
+				this.springs.push(game.physics.p2.createSpring(point, lastPoint, 12, 500, 2));
 			}
 
 			this.points.push(point);

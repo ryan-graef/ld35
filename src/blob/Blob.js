@@ -18,10 +18,11 @@ Blob.prototype = {
 	textureBmd: null,
 	textureSprite: null,
 
-	chakraBmd: null,
-	chakraSprite: null,
+	chakraFullSprite: null,
+	chakraEmptySprite: null,
 	chakraCount: 0,
 	maxChakraCount: 10,
+	chakraCropRect: null,
 
 	canJump: true,
 	jumpSpeed: 200,
@@ -42,15 +43,20 @@ Blob.prototype = {
 		this.textureSprite.anchor.setTo(0.5);
 		this.textureSprite.x = this.x;
 
-		this.chakraBmd = game.add.bitmapData(game.width, game.height);
-        this.chakraBmd.context.fillStyle = "#FF00FF";
-        this.chakraBmd.context.strokeStyle = "#FFFFFF";
-        this.chakraBmd.dirty = true;
-        this.chakraSprite = game.add.sprite(0, 0, this.chakraBmd);
-        this.chakraSprite.fixedToCamera = true;
-        this.chakraCount = this.maxChakraCount;
+		
+		this.chakraEmptySprite = game.add.sprite(25, game.height - 50, 'chakra-empty');
+		this.chakraEmptySprite.fixedToCamera = true;
+		this.chakraEmptySprite.alpha = 1;
 		this.blobCollisionGroup = game.physics.p2.createCollisionGroup();
+		
 		this._createBlob();
+
+		this.chakraCount = this.maxChakraCount;
+
+		this.chakraCropBmd = game.add.bitmapData(game.width, game.height);
+		this.chakraCropSprite = game.add.sprite(0, 0, this.chakraCropBmd);
+		this.chakraCropSprite.fixedToCamera = true;
+		this.chakraCropSprite.bringToTop();
 	},
 
 	_createBlob: function(){
@@ -81,7 +87,7 @@ Blob.prototype = {
             }
 
             point.body.fixedRotation = true;
-            //point.alpha = 0;
+            point.alpha = 0;
 
             this.outerPoints.push(point);
         }
@@ -127,17 +133,7 @@ Blob.prototype = {
     },
 
 	pointContactListener: function(bodyA, bodyB){
-		if(bodyA && bodyA.sprite && bodyA.sprite.key){
-			if(bodyA.sprite.key.key == 'leverTest'){
-				this.level.levers.forEach(function(lever){
-					if(lever.sprite == bodyA.sprite){
-						if(this.type == "circle"){
-							lever.activate();
-						}
-					}
-				}, this);
-			}
-		}
+
 	},
 
 	_createSprings: function(){
@@ -401,15 +397,11 @@ Blob.prototype = {
 	update: function(){
 		this.drawStuff();
 
-		//chakra bar draw
-		this.chakraBmd.context.clearRect(0, 0, this.chakraBmd.width, this.chakraBmd.height);
-		this.chakraBmd.context.beginPath();
-		this.chakraBmd.context.rect(25, this.chakraBmd.height-50, 350*(this.chakraCount/this.maxChakraCount), 25);
-		this.chakraBmd.context.fill();
-		this.chakraBmd.context.beginPath();
-		this.chakraBmd.context.rect(25, this.chakraBmd.height-50, 350, 25);
-		this.chakraBmd.context.stroke();
-		this.chakraBmd.dirty = true;
+		var chakraImage = game.cache.getImage('chakra-full');
+		this.chakraCropBmd.context.clearRect(0, 0, this.chakraCropBmd.width, this.chakraCropBmd.height);
+		this.chakraCropBmd.context.drawImage(chakraImage, 0, 0, chakraImage.width*(this.chakraCount/this.maxChakraCount), chakraImage.height, 25, game.height - 50, chakraImage.width*(this.chakraCount/this.maxChakraCount), chakraImage.height);
+		this.chakraCropBmd.dirty = true;
+		this.chakraCropSprite.bringToTop();
 
 		this.level.checkpoints.forEach(function(checkpoint){
 			if(this.centerPoint.x >= checkpoint.left && this.centerPoint.x <= checkpoint.right && this.centerPoint.y >= checkpoint.top && this.centerPoint.y <= checkpoint.bottom){
@@ -422,7 +414,9 @@ Blob.prototype = {
 
 		this.level.levers.forEach(function(lever){
 			if(this.centerPoint.x >= lever.sprite.left && this.centerPoint.x <= lever.sprite.right && this.centerPoint.y >= lever.sprite.top && this.centerPoint.y <= lever.sprite.bottom){
-				lever.activate();
+				if(lever.key == 'leverTest'){
+					lever.activate();
+				}
 			}
 		}, this);
 
@@ -564,7 +558,7 @@ Blob.prototype = {
 
 	isInWater: function(){
 		var onTile = this.level.map.getTile(Math.floor(this.x/32), Math.floor(this.y/32), this.level.layers[0]);
-		return (onTile && onTile.index == 399);
+		return (onTile && onTile.index == 431);
 	},
 
 	checkCanJump: function(){

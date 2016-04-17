@@ -17,6 +17,8 @@ Level.prototype = {
 
 	blockCollisionGroup: null,
 
+	leverCollisionGroup: null,
+
 	waterCollisionGroup: null,
 
 	mamaCollisionGroup: null,
@@ -26,14 +28,17 @@ Level.prototype = {
 	_construct: function(){
 		this.map = game.add.tilemap('test');
 		this.map.addTilesetImage('tileset', 'tileset');
-		this.layers.push(this.map.createLayer('Tile Layer 1'));
+		this.layers.push(this.map.createLayer('collision'));
+		this.layers.push(this.map.createLayer('triggers'));
+		this.layers.push(this.map.createLayer('main'));
 		game.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-		this.map.setCollisionBetween(0, 394);
+		this.map.setCollisionBetween(432, 432);
 		game.physics.p2.setBoundsToWorld();
 		this.mamaCollisionGroup = game.physics.p2.createCollisionGroup();
 		this.mapCollisionGroup = game.physics.p2.createCollisionGroup();
 		this.blockCollisionGroup = game.physics.p2.createCollisionGroup();
 		this.waterCollisionGroup = game.physics.p2.createCollisionGroup();
+		this.leverCollisionGroup = game.physics.p2.createCollisionGroup();
 		game.physics.p2.updateBoundsCollisionGroup();
 
 
@@ -46,16 +51,14 @@ Level.prototype = {
 				var tile = tiles[row][col];
 
 				//surface of water
-				if(tile.index == 400){
-					tile.alpha = 0;
-
+				if(tile.index == 431 && tiles[row -1] && tiles[row -1][col].index != 431){
 					if(!waterStart){
 						waterStart = tile;
-					}else if(tiles[row][col + 1] && tiles[row][col + 1].index != 400){
+					}else if(tiles[row][col + 1] && tiles[row][col + 1].index != 431){
 						var findEndRow = row;
 						do{
 							findEndRow++;
-						}while(tiles[findEndRow] && tiles[findEndRow][col].index === 399);
+						}while(tiles[findEndRow] && tiles[findEndRow][col].index === 431);
 
 						
 
@@ -65,9 +68,16 @@ Level.prototype = {
 				}
 
 				//generic "water here" tile
-				if(tile.index == 399){
-					tile.alpha = 4;
+				if(tile.index == 431){
+					tile.alpha = 1;
 				}
+			}
+		}
+
+		var tiles = this.layers[1].layer.data;
+		for(var row = 0; row < tiles.length; row++){
+			for(var col = 0; col < tiles[row].length; col++){
+				var tile = tiles[row][col];
 
 				//one of many lever tiles
 				if(tile.properties.triggerType){
