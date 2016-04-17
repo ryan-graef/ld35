@@ -26,7 +26,7 @@ Lever.prototype = {
 		this.sprite.animations.add('inactive-rose', [4]);
 		this.sprite.animations.add('active-rose', [5]);
 		this.sprite.play('inactive-'+this.type);
-		game.physics.p2.enable(this.sprite, true);
+		game.physics.p2.enable(this.sprite);
 		this.sprite.body.setRectangle(this.sprite.width, this.sprite.height - 6, 0, 6);
 		this.sprite.body.setCollisionGroup(this.context.leverCollisionGroup);
 		this.sprite.body.collides([this.context.blockCollisionGroup, this.context.hero.blobCollisionGroup]);

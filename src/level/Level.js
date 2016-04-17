@@ -170,6 +170,11 @@ Level.prototype = {
 		}, this);
 		this.levers = [];
 
+		this.platforms.forEach(function(platform){
+			platform.destroy();
+		}, this);
+		this.platforms = [];
+
 		var tiles = this.layers[1].layer.data;
 		for(var row = 0; row < tiles.length; row++){
 			for(var col = 0; col < tiles[row].length; col++){
