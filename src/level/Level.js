@@ -27,7 +27,7 @@ Level.prototype = {
 	mamaBlob: null,
 
 	isWaterTile: function(tile){
-		return tile.index == 403 || tile.index == 404 || tile.index == 431;
+		return tile.index == 431;
 	},
 
 	_construct: function(){

@@ -30,10 +30,12 @@ Water.prototype = {
 			var point = game.add.sprite(this.startX + (diffX/this.segmentCount)*i, this.startY, game.cache.getBitmapData('dot'));
 			point.scale.setTo(0.01);
 			game.physics.p2.enable(point);
-			point.body.setCollisionGroup(this.level.waterCollisionGroup);
-			point.body.mass = 0.5;
-			point.body.collides([this.level.hero.blobCollisionGroup, this.level.blockCollisionGroup]);
-			point.body.onBeginContact.add(this.pointContactListener, this);
+			if(this.level){
+				point.body.setCollisionGroup(this.level.waterCollisionGroup);
+				point.body.mass = 0.5;
+				point.body.collides([this.level.hero.blobCollisionGroup, this.level.blockCollisionGroup]);
+				point.body.onBeginContact.add(this.pointContactListener, this);
+			}
 			point.alpha = 0;
 			
 			

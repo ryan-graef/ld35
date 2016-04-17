@@ -8,7 +8,9 @@ document.addEventListener("DOMContentLoaded", function(event){
 
 	//add the game states
 	game.state.add('StartupState', new StartupState());
+	game.state.add('MenuState', new MenuState());
 	game.state.add('LoadState', new LoadState());
+	game.state.add('InstructionState', new InstructionState());
 	game.state.add('MainState', new MainState());
 
 	//kickoff the starting state, logo if not on localhost, mainstate otherwise

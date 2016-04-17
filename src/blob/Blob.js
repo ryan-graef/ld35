@@ -21,7 +21,7 @@ Blob.prototype = {
 	chakraFullSprite: null,
 	chakraEmptySprite: null,
 	chakraCount: 0,
-	maxChakraCount: 10,
+	maxChakraCount: 1000,
 	chakraCropRect: null,
 
 	canJump: true,
@@ -49,11 +49,16 @@ Blob.prototype = {
 
 		this.dustPoofs = game.add.physicsGroup(Phaser.Physics.P2JS);
 
-		this.chakraEmptySprite = game.add.sprite(25, game.height - 50, 'chakra-empty');
-		this.chakraEmptySprite.fixedToCamera = true;
-		this.chakraEmptySprite.alpha = 1;
-		this.blobCollisionGroup = game.physics.p2.createCollisionGroup();
-		
+		if(this.level){
+			this.chakraEmptySprite = game.add.sprite(25, game.height - 50, 'chakra-empty');
+			this.chakraEmptySprite.fixedToCamera = true;
+			this.chakraEmptySprite.alpha = 1;
+		}
+
+		if(this.level){
+			this.blobCollisionGroup = game.physics.p2.createCollisionGroup();
+		}
+
 		this._createBlob();
 
 		this.chakraCount = this.maxChakraCount;
@@ -96,12 +101,14 @@ Blob.prototype = {
             point.alpha = 0;
             point.anchor.setTo(0.5);
             point.body.onBeginContact.add(this.pointContactListener, this);
-            if(this.type == 'mama'){
-            	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
-            }else{
-            	point.body.setCollisionGroup(this.blobCollisionGroup);
-            	point.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup, this.level.waterCollisionGroup, this.level.spikeCollisionGroup]);
-            }
+            if(this.level){
+	            if(this.type == 'mama'){
+	            	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
+	            }else{
+	            	point.body.setCollisionGroup(this.blobCollisionGroup);
+	            	point.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup, this.level.waterCollisionGroup, this.level.spikeCollisionGroup]);
+	            }
+	        }
 
             point.body.fixedRotation = true;
             point.alpha = 0;
@@ -115,10 +122,12 @@ Blob.prototype = {
         this.centerPoint.anchor.setTo(0.5);
         game.physics.p2.enable(this.centerPoint);
         this.centerPoint.alpha = 0;
-        this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
-        this.centerPoint.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup]);
+        if(this.level){
+        	this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
+       		this.centerPoint.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup]);
+        }
         this.centerPoint.body.fixedRotation = true;
-        if(this.type == 'mama'){
+        if(this.type == 'mama' && this.level){
         	this.centerPoint.body.setCollisionGroup(this.level.mamaCollisionGroup);
         }
         //this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
@@ -134,13 +143,13 @@ Blob.prototype = {
 	        this.eyeLeft.animations.add('circle-eye', [0]);
 	        this.eyeLeft.animations.add('square-eye', [2]);
 	        this.eyeLeft.animations.add('triangle-eye', [1]);
-	       	this.eyeLeft.animations.play('circle-eye');
+	       	this.eyeLeft.animations.play(this.type+'-eye');
 	        this.eyeRight = game.add.sprite(this.x, this.y, 'blob-eyes');
 	        this.eyeRight.anchor.setTo(0.5);
 	        this.eyeRight.animations.add('circle-eye', [0]);
 	        this.eyeRight.animations.add('square-eye', [2]);
 	        this.eyeRight.animations.add('triangle-eye', [1]);
-	        this.eyeRight.animations.play('circle-eye');
+	        this.eyeRight.animations.play(this.type+'-eye');
 	    }else{
 	    	this.eyeLeft = game.add.sprite(this.x, this.y, 'big-eye');
 	        this.eyeLeft.anchor.setTo(0.5);
@@ -239,8 +248,10 @@ Blob.prototype = {
 
 	reset: function(){
 		this.chakraCount = this.maxChakraCount;
-		this.x = this.level.lastCheckpoint.x;
-		this.y = this.level.lastCheckpoint.y;
+		if(this.level){
+			this.x = this.level.lastCheckpoint.x;
+			this.y = this.level.lastCheckpoint.y;
+		}
 		this.destroy();
 		this._createBlob();
 		this.alive = true;
@@ -422,18 +433,20 @@ Blob.prototype = {
 	update: function(){
 		this.drawStuff();
 
-		var chakraImage = game.cache.getImage('chakra-full');
-		this.chakraCropBmd.context.clearRect(0, 0, this.chakraCropBmd.width, this.chakraCropBmd.height);
-		this.chakraCropBmd.context.drawImage(chakraImage, 0, 0, chakraImage.width*(this.chakraCount/this.maxChakraCount), chakraImage.height, 25, game.height - 50, chakraImage.width*(this.chakraCount/this.maxChakraCount), chakraImage.height);
-		this.chakraCropBmd.dirty = true;
-		this.chakraCropSprite.bringToTop();
+		if(this.level){
+			var chakraImage = game.cache.getImage('chakra-full');
+			this.chakraCropBmd.context.clearRect(0, 0, this.chakraCropBmd.width, this.chakraCropBmd.height);
+			this.chakraCropBmd.context.drawImage(chakraImage, 0, 0, chakraImage.width*(this.chakraCount/this.maxChakraCount), chakraImage.height, 25, game.height - 50, chakraImage.width*(this.chakraCount/this.maxChakraCount), chakraImage.height);
+			this.chakraCropBmd.dirty = true;
+			this.chakraCropSprite.bringToTop();
+		}
 
 		//reset
 		if(game.input.keyboard.downDuration(Phaser.Keyboard.R, 10)){
 			this.reset();
 		}
 
-		if(this.alive){
+		if(this.alive && this.level){
 				this.level.checkpoints.forEach(function(checkpoint){
 				if(this.centerPoint.x >= checkpoint.left && this.centerPoint.x <= checkpoint.right && this.centerPoint.y >= checkpoint.top && this.centerPoint.y <= checkpoint.bottom){
 					if(this.level.lastCheckpoint != checkpoint){

@@ -4,6 +4,7 @@ Config = {
     sprites: [
         //{key: "SpriteKey", imagePath: "path/to/image"}
         {key: 'tileset', imagePath: 'res/img/tileset.png'},
+        {key: 'background', imagePath: 'res/img/background.png'},
         {key: 'spike', imagePath: 'res/img/large-spike.png'},
         {key: 'water-drop', imagePath: 'res/img/water-drop.png'},
         {key: 'dust-poof', imagePath: 'res/img/dust.png'},
@@ -25,10 +26,13 @@ Config = {
     //tilemaps are assumed to be Tiled JSON.
     tileMaps: [
         //{key: "MapKey", jsonPath: "path/to/json"}
-        {key: "test", jsonPath: "res/lvl/test.json"}
+        {key: "test", jsonPath: "res/lvl/test.json"},
+        {key: "title", jsonPath: "res/lvl/title.json"}
     ],
     fonts: [
         //{key: "FontKey", imagePath: "path/to/image", xmlPath: "path/to/XML"}
+        {key: "font-75", imagePath: "res/fnt/font-75.png", xmlPath: "res/fnt/font-75.xml"},
+        {key: "font-45", imagePath: "res/fnt/font-45.png", xmlPath: "res/fnt/font-45.xml"}
     ],
     sfx: [
         //{key: "SfxKey", filePath: "path/to/audiofile"}
