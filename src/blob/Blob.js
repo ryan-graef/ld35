@@ -54,6 +54,7 @@ Blob.prototype = {
 		this.expression = "normal";
 
 		this.dustPoofs = game.add.physicsGroup(Phaser.Physics.P2JS);
+		this.reuseIndex = 0;
 
 		if(this.level){
 			this.chakraEmptySprite = game.add.sprite(25, game.height - 50, 'chakra-empty');
@@ -184,7 +185,7 @@ Blob.prototype = {
 				this.die();
 			}
 
-			if(bodyA.sprite.key && bodyA.sprite.key == "crate"){
+			if(bodyA.sprite.key && bodyA.sprite.key == "crate" && this.type == 'square'){
 				this.expression = 'shocked';
 			}
 
@@ -199,7 +200,7 @@ Blob.prototype = {
 	},
 
 	pointEndContactListener: function(bodyA, bodyB){
-		if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key == "crate"){
+		if(bodyA && bodyA.sprite && bodyA.sprite.key && bodyA.sprite.key == "crate" && this.type == 'square'){
 				this.expression = 'normal';
 		}
 	},
@@ -574,8 +575,8 @@ Blob.prototype = {
 				    			point.body.velocity.y += -diffY*1.5;
 				    			point.body.velocity.x += -diffX*1.5;
 				    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
-				    			point.body.velocity.y += diffY*1.5;
-				    			point.body.velocity.x += diffX*1.5;
+				    			point.body.velocity.y += diffY*.5;
+				    			point.body.velocity.x += diffX*.5;
 				    		}
 			    		}
 		        	}, this);
@@ -622,7 +623,17 @@ Blob.prototype = {
 				var y = this.y + 40;
 
 				for(var i = 0; i < 5; i++){
-					var drop = this.dustPoofs.create(x, y, 'dust-poof');
+					var drop;
+					if(this.dustPoofs.length <= 500){
+						drop = this.dustPoofs.create(x, y, 'dust-poof');
+					}else{
+						this.reuseIndex++;
+						drop = this.dustPoofs.getAt(this.reuseIndex%500);
+						drop.body.data.position[0] = x/-20;
+						drop.body.data.position[1] = y/-20;
+						drop.x = x;
+						drop.y = y;
+					}
 					drop.body.setCollisionGroup(this.level.waterCollisionGroup);
 					drop.body.collides([this.level.mapCollisionGroup]);
 					drop.body.velocity.y = game.rnd.integerInRange(-100, -50);
@@ -661,11 +672,15 @@ Blob.prototype = {
 	    		}, this);
 	    	}else{
 	    		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
-		            this.centerPoint.body.velocity.x += 40;
+	    				if(this.centerPoint.body.velocity.x < 200){
+		            		this.centerPoint.body.velocity.x += 40;
+	    				}
 						this.eyeLeft.scale.x = 1;
 						this.eyeRight.scale.x = 1;
 		        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
-		            this.centerPoint.body.velocity.x -= 40;
+		        		if(this.centerPoint.body.velocity.x > -200){
+		            		this.centerPoint.body.velocity.x -= 40;
+		        		}
 		            	this.eyeLeft.scale.x = -1;
 						this.eyeRight.scale.x = -1;
 		        }

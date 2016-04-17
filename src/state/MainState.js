@@ -58,11 +58,11 @@ MainState.prototype = {
         game.cache.addBitmapData('textBoxTest', bmdTextBoxTest);
 
         //just draw all the water on one bmd across the whole world
-        var bmdWater = game.add.bitmapData(10000, game.height);
+        var bmdWater = game.add.bitmapData(game.width, game.height);
         bmdWater.context.fillStyle = "rgba(50, 124, 173, 0.5)";
         bmdWater.dirty = true;
         game.cache.addBitmapData('water', bmdWater);
-        var waterSprite = game.add.sprite(0, 0, bmdWater);
+        this.waterSprite = game.add.sprite(0, 0, bmdWater);
 
         var bmdLeverTest = game.add.bitmapData(48, 64);
         bmdLeverTest.context.fillStyle = "#FFFF00";
@@ -76,12 +76,6 @@ MainState.prototype = {
         bmdPlatformTest.dirty = true;
         game.cache.addBitmapData('platformTest', bmdPlatformTest);
 
-        var bmdPlateTest = game.add.bitmapData(48, 16);
-        bmdPlateTest.context.fillStyle = "#FFFFFF";
-        bmdPlateTest.context.fillRect(0, 0, 48, 16);
-        bmdPlateTest.dirty = true;
-        game.cache.addBitmapData('plateTest', bmdPlateTest);
-
         var bmdCheckpointTest = game.add.bitmapData(32, 64);
         bmdCheckpointTest.context.fillStyle = "#FFFFFF";
         bmdCheckpointTest.context.fillRect(0, 0, 32, 64);
@@ -90,7 +84,7 @@ MainState.prototype = {
 
         this.level = new Level();
 
-        waterSprite.bringToTop();
+        this.waterSprite.bringToTop();
         this.level.mamaBlob.textureSprite.bringToTop();
         this.level.mamaBlob.eyeLeft.bringToTop();
         this.level.mamaBlob.eyeRight.bringToTop();
@@ -105,7 +99,9 @@ MainState.prototype = {
         this.level.update();
 
         this.backgroundSprite.x = game.camera.x/2;
-        this.backgroundSprite.y = game.camera.y/2;
+        this.backgroundSprite.y = game.camera.y/1.5;
+        this.waterSprite.x = game.camera.x;
+        this.waterSprite.y = game.camera.y;
     },
 
     render: function(){

@@ -16,7 +16,7 @@ Level.prototype = {
 
 	textBoxSprite: null,
 	textBoxText: null,
-	text: [],
+	text: [""],
 	textIndexCount: 0,
 
 
@@ -42,6 +42,7 @@ Level.prototype = {
 		this.layers.push(this.map.createLayer('collision'));
 		this.layers.push(this.map.createLayer('triggers'));
 		this.layers.push(this.map.createLayer('main'));
+		this.layers.push(this.map.createLayer('foreground'));
 		game.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 		this.map.setCollisionBetween(432, 432);
 		game.physics.p2.setBoundsToWorld();
@@ -86,7 +87,7 @@ Level.prototype = {
 
 						
 
-						waterTiles.push([waterStart, tile, (findEndRow-1)*32]);
+						waterTiles.push([waterStart, tile, (findEndRow-waterStart.y)*32]);
 						waterStart = null;
 					}
 				}
@@ -140,23 +141,26 @@ Level.prototype = {
         var bodies = game.physics.p2.convertTilemap(this.map, this.layers[0], true, false);
 		for(var i = 0; i < bodies.length; i++){
 			var tileBody = bodies[i];
-			tileBody.setRectangle(32, 28, 16, 20, 0);
+			//tileBody.setRectangle(32, 28, 16, 20, 0);
 			//tileBody.debug = true;
 			tileBody.setCollisionGroup(this.mapCollisionGroup);
 			tileBody.collides([this.hero.blobCollisionGroup, this.blockCollisionGroup, this.waterCollisionGroup]);
 		}
 
         this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
-        this.blocks.push(new Block(350, 250, this));
 
         var furthestLeft = this.checkpoints[0];
         this.checkpoints.forEach(function(checkpoint){
-        	if(checkpoint.x < furthestLeft.x){
+        	if(checkpoint.x > furthestLeft.x){
         		furthestLeft = checkpoint;
         	}
         });
         this.lastCheckpoint = furthestLeft;
 
+        this.hero.reset();
+
+        this.text.push("2342342342 3424234234");
+        this.text.push("2342342342 234234234234");
     },
 
 	generateLevel: function(){
@@ -187,6 +191,12 @@ Level.prototype = {
 					var activatesArray = JSON.parse(tile.properties.triggerActivates);
 					this.levers.push(new Lever(tile.x*32, tile.y*32, this, tile.properties.switchType, activatesArray, tile.properties.triggerType));
 				}
+
+				if(tile.properties.block){
+					tile.alpha = 0;
+					var block = new Block(tile.worldX, tile.worldY, this);
+					this.blocks.push(block);
+				}
 			}
 		}
 	},
@@ -199,7 +209,7 @@ Level.prototype = {
 		this.textBoxText.parent.bringToTop(this.textBoxText);
 
 
-		if(this.textIndexCount >= this.text.length - 1){
+		if(this.textIndexCount > this.text.length){
 			this.hero.update();
 			this.mamaBlob.drawStuff();
 			this.mamaBlob.moveRight();
@@ -214,8 +224,11 @@ Level.prototype = {
 			this.textBoxText.alpha = 1;
 
 			if(game.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)){
+				if(this.text[this.textIndexCount]){
+					this.setText(this.text[this.textIndexCount]);
+				}
+
 				this.textIndexCount++;
-				this.setText(this.text[this.textIndexCount]);
 			}
 		}
 	},

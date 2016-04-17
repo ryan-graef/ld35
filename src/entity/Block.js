@@ -10,6 +10,7 @@ Block.prototype = {
 
 	_construct: function(){
 		this.sprite = game.add.sprite(this.x, this.y, 'crate');
+		this.sprite.anchor.setTo(0.5);
 		game.physics.p2.enable(this.sprite);
 		this.sprite.body.onBeginContact.add(this.pointContactListener, this);
 		this.sprite.body.mass = 150;
