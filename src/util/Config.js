@@ -5,6 +5,8 @@ Config = {
         //{key: "SpriteKey", imagePath: "path/to/image"}
         {key: 'tileset', imagePath: 'res/img/tileset.png'},
         {key: 'spike', imagePath: 'res/img/large-spike.png'},
+        {key: 'water-drop', imagePath: 'res/img/water-drop.png'},
+        {key: 'dust-poof', imagePath: 'res/img/dust.png'},
         {key: 'big-eye', imagePath: 'res/img/big-blob-eye.png'},
         {key: 'chakra-empty', imagePath: 'res/img/chakra-empty.png'},
         {key: 'chakra-full', imagePath: 'res/img/chakra-full.png'},

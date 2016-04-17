@@ -52,7 +52,7 @@ MainState.prototype = {
 
         //just draw all the water on one bmd across the whole world
         var bmdWater = game.add.bitmapData(10000, game.height);
-        bmdWater.context.fillStyle = "rgba(0, 0, 255, 0.5)";
+        bmdWater.context.fillStyle = "rgba(69, 207, 223, 0.5)";
         bmdWater.dirty = true;
         game.cache.addBitmapData('water', bmdWater);
         var waterSprite = game.add.sprite(0, 0, bmdWater);

@@ -12,6 +12,7 @@ Water = function(startX, startY, endX, endY, height, level){
 Water.prototype = {
 	points: [],
 	springs: [],
+	droplets: null,
 	length: null,
 	segmentLength: 32,
 	segmentCount: null,
@@ -20,15 +21,19 @@ Water.prototype = {
 		var diffX = Math.abs(this.startX - this.endX);
 		this.length = diffX
 		this.segmentCount = Math.ceil(this.length/this.segmentLength);
+			
+		this.droplets = game.add.physicsGroup(Phaser.Physics.P2JS);
 
 		
 		var lastPoint = null;
 		for(var i = 0; i <= this.segmentCount + 1; i++){
 			var point = game.add.sprite(this.startX + (diffX/this.segmentCount)*i, this.startY, game.cache.getBitmapData('dot'));
-			point.scale.setTo(0.25);
+			point.scale.setTo(0.01);
 			game.physics.p2.enable(point);
 			point.body.setCollisionGroup(this.level.waterCollisionGroup);
+			point.body.mass = 0.5;
 			point.body.collides([this.level.hero.blobCollisionGroup, this.level.blockCollisionGroup]);
+			point.body.onBeginContact.add(this.pointContactListener, this);
 			point.alpha = 0;
 			
 			
@@ -51,6 +56,19 @@ Water.prototype = {
 
 		for(var i = 0; i < this.segmentCount - 1; i++){
 			//this.springs.push(game.physics.p2.addSpring(this.points[i], this.points[i+1], this.segmentLength, 50, 2));
+		}
+	},
+
+	pointContactListener: function(bodyA, bodyB, c, d){
+		if(bodyA && bodyA.sprite){
+			var x = bodyA.sprite.x;
+			var y = bodyA.sprite.y;
+
+			for(var i = 0; i < 10; i++){
+				var drop = this.droplets.create(x, y, 'water-drop');
+				drop.body.velocity.y = -200 + game.rnd.integerInRange(-50, 50);
+				drop.body.velocity.x = game.rnd.integerInRange(-50, 50)
+			}
 		}
 	},
 

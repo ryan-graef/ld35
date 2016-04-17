@@ -33,6 +33,8 @@ Blob.prototype = {
 	canPlaySplash: true,
 	canPlayLand: false,
 
+	dustPoofs: null,
+
 	blobCollisionGroup: null,
 
 	alive: true,
@@ -45,7 +47,8 @@ Blob.prototype = {
 		this.textureSprite.anchor.setTo(0.5);
 		this.textureSprite.x = this.x;
 
-		
+		this.dustPoofs = game.add.physicsGroup(Phaser.Physics.P2JS);
+
 		this.chakraEmptySprite = game.add.sprite(25, game.height - 50, 'chakra-empty');
 		this.chakraEmptySprite.fixedToCamera = true;
 		this.chakraEmptySprite.alpha = 1;
@@ -531,6 +534,16 @@ Blob.prototype = {
 		    if(this.canPlayLand && this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
 		    	landSfx.play();
 		    	this.canPlayLand = false;
+		    	var x = this.x;
+				var y = this.y + 40;
+
+				for(var i = 0; i < 5; i++){
+					var drop = this.dustPoofs.create(x, y, 'dust-poof');
+					drop.body.setCollisionGroup(this.level.waterCollisionGroup);
+					drop.body.collides([this.level.mapCollisionGroup]);
+					drop.body.velocity.y = game.rnd.integerInRange(-100, -50);
+					drop.body.velocity.x = 5*game.rnd.integerInRange(-50, 50)
+				}
 		    }else if(!this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
 		    	this.canPlayLand = true;
 		    }

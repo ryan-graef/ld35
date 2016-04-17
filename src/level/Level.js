@@ -157,7 +157,7 @@ Level.prototype = {
 		for(var i = 0; i < bodies.length; i++){
 			var tileBody = bodies[i];
 			tileBody.setCollisionGroup(this.mapCollisionGroup);
-			tileBody.collides([this.hero.blobCollisionGroup, this.blockCollisionGroup]);
+			tileBody.collides([this.hero.blobCollisionGroup, this.blockCollisionGroup, this.waterCollisionGroup]);
 		}
 	},
 
