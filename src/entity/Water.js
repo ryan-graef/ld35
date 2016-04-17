@@ -1,10 +1,11 @@
-Water = function(startX, startY, endX, endY, height, level){
+Water = function(startX, startY, endX, endY, height, level, solidSurface){
 	this.startX = startX;
 	this.startY = startY;
 	this.endX = endX;
 	this.endY = endY;
 	this.level = level;
 	this.height = height;
+	this.solidSurface = solidSurface
 
 	this._construct();
 }
@@ -33,7 +34,7 @@ Water.prototype = {
 			var point = game.add.sprite(this.startX + (diffX/this.segmentCount)*i, this.startY, game.cache.getBitmapData('dot'));
 			point.scale.setTo(0.01);
 			game.physics.p2.enable(point);
-			if(this.level){
+			if(this.level && !this.solidSurface){
 				point.body.setCollisionGroup(this.level.waterCollisionGroup);
 				point.body.mass = 0.5;
 				point.body.collides([this.level.hero.blobCollisionGroup, this.level.blockCollisionGroup]);
@@ -47,6 +48,10 @@ Water.prototype = {
 			}
 
 			if(i == 0 || i == this.segmentCount + 1){
+				point.body.dynamic = false;
+			}
+
+			if(this.solidSurface){
 				point.body.dynamic = false;
 			}
 
@@ -91,7 +96,6 @@ Water.prototype = {
 
 	update: function(){
 		var bmd = game.cache.getBitmapData('water');
-		bmd.context.clearRect(0, 0, bmd.width, bmd.height);
 		bmd.context.beginPath();
 		bmd.context.moveTo(this.points[0].x - game.camera.x, this.points[1].y - game.camera.y);
 		for(var i = 1; i < this.points.length; i++){

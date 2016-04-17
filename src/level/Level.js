@@ -79,15 +79,15 @@ Level.prototype = {
 				if(this.isWaterTile(tile) && tiles[row -1] && !this.isWaterTile(tiles[row -1][col])){
 					if(!waterStart){
 						waterStart = tile;
-					}else if(tiles[row][col + 1] && !this.isWaterTile(tiles[row][col + 1])){
+					}else if(tiles[row][col + 1] && (!this.isWaterTile(tiles[row][col + 1]) || (this.isWaterTile(tiles[row][col + 1]) && this.isWaterTile(tiles[row-1][col+1])))){
 						var findEndRow = row;
 						do{
 							findEndRow++;
 						}while(tiles[findEndRow] && this.isWaterTile(tiles[findEndRow][col]));
 
 						
-
-						waterTiles.push([waterStart, tile, (findEndRow-waterStart.y)*32]);
+						var solid = (tiles[row-1] && tiles[row-1][col].index == 432);
+						waterTiles.push([waterStart, tile, (findEndRow-waterStart.y)*32, solid]);
 						waterStart = null;
 					}
 				}
@@ -135,7 +135,7 @@ Level.prototype = {
 		this.generateLevel();
 
         waterTiles.forEach(function(waterTileSet){
-			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2], this));
+			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2], this, waterTileSet[3]));
 		}, this);
 
         var bodies = game.physics.p2.convertTilemap(this.map, this.layers[0], true, false);
@@ -202,6 +202,8 @@ Level.prototype = {
 	},
 
 	update: function(){
+		var bmd = game.cache.getBitmapData('water');
+		bmd.context.clearRect(0, 0, bmd.width, bmd.height);
 		this.water.forEach(function(waterTil){
 			waterTil.update();
 		}, this);
