@@ -15,9 +15,24 @@ MainState.prototype = {
     },
 
     create: function(){
+        bgm = game.add.audio('bgm');
+        bgm.loop = true;
+       //bgm.play();
+
+        splashSfx = game.add.audio('splash');
+        splashSfx.volume = 0.3;
+
+        transformSfx = game.add.audio('transform');
+        transformSfx.volume = 0.8;
+
+        jumpSfx = game.add.audio('jump');
+
+        landSfx = game.add.audio('land');
+        landSfx.volume = 0.4;
+
         //remove this line if not using lighting effects
         //game.plugins.add(Phaser.Plugin.PhaserIlluminated);
-        
+
         this.backgroundSprite = game.add.sprite(0, 0, 'background');
 
         game.physics.startSystem(Phaser.Physics.P2JS);
@@ -36,6 +51,12 @@ MainState.prototype = {
         bmdCrateTest.context.fillRect(0, 0, 64, 64);
         bmdCrateTest.dirty = true;
         game.cache.addBitmapData('blockTest', bmdCrateTest);
+
+        var bmdTextBoxTest = game.add.bitmapData(400, 100);
+        bmdTextBoxTest.context.fillStyle = "#FaaaaF";
+        bmdTextBoxTest.context.fillRect(0, 0, bmdTextBoxTest.width, bmdTextBoxTest.height);
+        bmdTextBoxTest.dirty = true;
+        game.cache.addBitmapData('textBoxTest', bmdTextBoxTest);
 
         //just draw all the water on one bmd across the whole world
         var bmdWater = game.add.bitmapData(10000, game.height);

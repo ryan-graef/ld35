@@ -24,3 +24,8 @@ document.addEventListener("DOMContentLoaded", function(event){
 window.isDev = function(){
     return (window.location.href.indexOf('localhost') > -1);
 }
+
+String.prototype.splice = function(idx, rem, str) {
+    return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+};
+

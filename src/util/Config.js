@@ -34,7 +34,8 @@ Config = {
     fonts: [
         //{key: "FontKey", imagePath: "path/to/image", xmlPath: "path/to/XML"}
         {key: "font-75", imagePath: "res/fnt/font-75.png", xmlPath: "res/fnt/font-75.xml"},
-        {key: "font-45", imagePath: "res/fnt/font-45.png", xmlPath: "res/fnt/font-45.xml"}
+        {key: "font-45", imagePath: "res/fnt/font-45.png", xmlPath: "res/fnt/font-45.xml"},
+        {key: "font-26", imagePath: "res/fnt/font-26.png", xmlPath: "res/fnt/font-26.xml"}
     ],
     sfx: [
         //{key: "SfxKey", filePath: "path/to/audiofile"}

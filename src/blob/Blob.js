@@ -546,7 +546,7 @@ Blob.prototype = {
 	    		}
 		    }
 
-		    if(this.canPlayLand && this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
+		    if(this.canPlayLand && this.checkCanJump() && this.centerPoint.body.velocity.y > 0 && !this.isInWater()){
 		    	landSfx.play();
 		    	this.canPlayLand = false;
 		    	var x = this.x;
