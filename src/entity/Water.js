@@ -4,7 +4,7 @@ Water = function(startX, startY, endX, endY, height, level, solidSurface){
 	this.endX = endX;
 	this.endY = endY;
 	this.level = level;
-	this.height = height;
+	this.height = height + 32;
 	this.solidSurface = solidSurface
 
 	this._construct();
@@ -77,9 +77,9 @@ Water.prototype = {
 			for(var i = 0; i < 10; i++){
 				var drop;
 
-				if(this.droplets.length >= 1000){
+				if(this.droplets.length >= 100){
 					this.reuseIndex++;
-					drop = this.droplets.getAt(this.reuseIndex%1000);
+					drop = this.droplets.getAt(this.reuseIndex%100);
 					drop.body.data.position[0] = x/-20;
 					drop.body.data.position[1] = y/-20;
 					drop.x = x;
