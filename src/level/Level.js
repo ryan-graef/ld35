@@ -99,7 +99,7 @@ Level.prototype = {
 
 				//collision
 				if(tile.index == 432){
-					//tile.alpha = 0;
+					tile.alpha = 0;
 				}
 			}
 		}

@@ -1,10 +1,11 @@
 Config = {
-    name: "ReplaceWithGameName",
+    name: "Transform! The Three Natures",
     version: "0.0.0",
     sprites: [
         //{key: "SpriteKey", imagePath: "path/to/image"}
         {key: 'tileset', imagePath: 'res/img/tileset.png'},
         {key: 'crate', imagePath: 'res/img/crate.png'},
+        {key: 'help-screen', imagePath: 'res/img/how-to-play.png'},
         {key: 'volume-on', imagePath: 'res/img/volume-on.png'},
         {key: 'volume-off', imagePath: 'res/img/volume-off.png'},
         {key: 'home-screen', imagePath: 'res/img/home-screen.png'},

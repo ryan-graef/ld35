@@ -36,7 +36,23 @@ LoadState.prototype = {
     },
 
     create: function(){
-        game.state.start('MainState');
+        bgm = game.add.audio('bgm');
+        bgmMuffled = game.add.audio('bgm-muffled');
+        bgm.loop = true;
+       //bgm.play();
+
+        splashSfx = game.add.audio('splash');
+        splashSfx.volume = 0.3;
+
+        transformSfx = game.add.audio('transform');
+        transformSfx.volume = 0.8;
+
+        jumpSfx = game.add.audio('jump');
+
+        landSfx = game.add.audio('land');
+        landSfx.volume = 0.4;
+
+        game.state.start('MenuState');
     },
 
     update: function(){

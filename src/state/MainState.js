@@ -16,23 +16,23 @@ MainState.prototype = {
     },
 
     create: function(){
-        bgm = game.add.audio('bgm');
-        bgmMuffled = game.add.audio('bmg-muffled');
+        //bgm = game.add.audio('bgm');
+        //bgmMuffled = game.add.audio('bmg-muffled');
         bgm.loop = true;
         bgmMuffled.loop = true;
         bgm.play();
         bgmMuffled.volume = 0;
         bgmMuffled.play();
   
-        splashSfx = game.add.audio('splash');
+        //splashSfx = game.add.audio('splash');
         splashSfx.volume = 0.3;
 
-        transformSfx = game.add.audio('transform');
+        //transformSfx = game.add.audio('transform');
         transformSfx.volume = 0.8;
 
-        jumpSfx = game.add.audio('jump');
+        //jumpSfx = game.add.audio('jump');
 
-        landSfx = game.add.audio('land');
+        //landSfx = game.add.audio('land');
         landSfx.volume = 0.4;
 
         //remove this line if not using lighting effects
