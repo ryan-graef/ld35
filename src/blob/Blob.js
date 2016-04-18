@@ -536,7 +536,7 @@ Blob.prototype = {
 					transformSfx.play();
 				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.TWO, 10)){
 					this.type = "square";
-					this.level.setBlockMass(5);
+					this.level.setBlockMass(3);
 					this._createSprings();
 					this.chakraCount--;
 					transformSfx.play();
@@ -676,13 +676,13 @@ Blob.prototype = {
 	    	}else{
 	    		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
 	    				if(this.centerPoint.body.velocity.x < 200){
-		            		this.centerPoint.body.velocity.x += 40;
+		            		this.centerPoint.body.velocity.x += (this.type == 'square' ? 80 : 40);
 	    				}
 						this.eyeLeft.scale.x = 1;
 						this.eyeRight.scale.x = 1;
 		        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
 		        		if(this.centerPoint.body.velocity.x > -200){
-		            		this.centerPoint.body.velocity.x -= 40;
+		            		this.centerPoint.body.velocity.x -= (this.type == 'square' ? 80 : 40);
 		        		}
 		            	this.eyeLeft.scale.x = -1;
 						this.eyeRight.scale.x = -1;
