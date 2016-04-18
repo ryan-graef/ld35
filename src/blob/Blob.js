@@ -77,9 +77,12 @@ Blob.prototype = {
 	},
 
 	die: function(){
-		this.alive = false;
-		this.expression = "shocked";
-		this.removeSprings();
+        if(this.isAlive){
+    		this.alive = false;
+    		this.expression = "shocked";
+            dieSfx.play();
+    		this.removeSprings();
+        }
 	},
 
 	removeSprings: function(){
@@ -516,6 +519,7 @@ Blob.prototype = {
 					if(this.level.lastCheckpoint != checkpoint){
 						this.chakraCount = this.maxChakraCount;
 						this.level.lastCheckpoint = checkpoint;
+                        checkpointSfx.play();
 					}
 				}
 			}, this);

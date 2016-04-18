@@ -6,6 +6,9 @@ var splashSfx;
 var transformSfx;
 var jumpSfx;
 var landSfx;
+var deathSfx;
+var switchSfx;
+var checkpointSfx;
 
 MainState.prototype = {
     level: null,

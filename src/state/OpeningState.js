@@ -94,7 +94,7 @@ OpeningState.prototype = {
                 text: 'Now, go through the obstacles\nI\'ve set up, and we\'ll meet at the end.'
             },{
                 subject: 'circle',
-                emotion: 'annoyed',
+                emotion: 'shocked',
                 text: 'I will do my best!'
             }],
     textLineIndex: 0,

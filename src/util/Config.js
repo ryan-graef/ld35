@@ -43,10 +43,13 @@ Config = {
     ],
     sfx: [
         //{key: "SfxKey", filePath: "path/to/audiofile"}
-        {key: 'splash', filePath: 'res/sfx/splash.wav'},
-        {key: 'transform', filePath: 'res/sfx/transform.wav'},
+        {key: 'splash', filePath: 'res/sfx/splash2.wav'},
+        {key: 'transform', filePath: 'res/sfx/transform2.wav'},
         {key: 'jump', filePath: 'res/sfx/jump.wav'},
         {key: 'land', filePath: 'res/sfx/land.wav'},
+        {key: 'switch', filePath: 'res/sfx/switch.wav'},
+        {key: 'checkpoint', filePath: 'res/sfx/checkpoint.wav'},
+        {key: 'die', filePath: 'res/sfx/death.wav'},
         {key: 'bmg-muffled', filePath: "res/sfx/bgm-muffled.ogg"}
     ],
     //music loops by default

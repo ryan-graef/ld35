@@ -54,6 +54,10 @@ LoadState.prototype = {
         landSfx.volume = 0.4;
 
         game.state.start('MenuState');
+
+        switchSfx = game.add.audio('switch');
+        dieSfx = game.add.audio('die');
+        checkpointSfx = game.add.audio('checkpoint');
     },
 
     update: function(){

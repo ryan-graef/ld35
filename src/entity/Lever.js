@@ -59,6 +59,7 @@ Lever.prototype = {
 
 	handleActivate: function(){
 		this.activatesArray.forEach(function(activates){
+			switchSfx.play();
 			if(this.triggerType == 'block'){
 				this.context.blocks.push(new Block(activates[0]*32, activates[1]*32, this.context));
 			}else{
