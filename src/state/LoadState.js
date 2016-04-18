@@ -37,8 +37,9 @@ LoadState.prototype = {
 
     create: function(){
         bgm = game.add.audio('bgm');
-        bgmMuffled = game.add.audio('bgm-muffled');
+        
         bgm.loop = true;
+        //bgmMuffled.volume = 0;
        //bgm.play();
 
         splashSfx = game.add.audio('splash');

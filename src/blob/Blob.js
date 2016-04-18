@@ -626,11 +626,11 @@ Blob.prototype = {
 
 				for(var i = 0; i < 5; i++){
 					var drop;
-					if(this.dustPoofs.length <= 500){
+					if(this.dustPoofs.length <= 100){
 						drop = this.dustPoofs.create(x, y, 'dust-poof');
 					}else{
 						this.reuseIndex++;
-						drop = this.dustPoofs.getAt(this.reuseIndex%500);
+						drop = this.dustPoofs.getAt(this.reuseIndex%100);
 						drop.body.data.position[0] = x/-20;
 						drop.body.data.position[1] = y/-20;
 						drop.x = x;

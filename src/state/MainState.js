@@ -17,7 +17,7 @@ MainState.prototype = {
 
     create: function(){
         //bgm = game.add.audio('bgm');
-        //bgmMuffled = game.add.audio('bmg-muffled');
+        bgmMuffled = game.add.audio('bmg-muffled');
         bgm.loop = true;
         bgmMuffled.loop = true;
         bgm.play();
@@ -79,6 +79,7 @@ MainState.prototype = {
         this.level = new Level();
 
         this.waterSprite.bringToTop();
+        this.level.layers[3].parent.bringToTop(this.level.layers[3]);
         //this.level.mamaBlob.textureSprite.bringToTop();
         //this.level.mamaBlob.eyeLeft.bringToTop();
         //this.level.mamaBlob.eyeRight.bringToTop();

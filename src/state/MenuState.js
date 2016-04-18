@@ -8,7 +8,10 @@ MenuState.prototype = {
     create: function(){
         if(!bgm.isPlaying){
             bgm.play();
+            //bgmMuffled.play();
         }
+
+
 
         this.backgroundSprite = game.add.sprite(-100, 0, 'background');
         this.backgroundSprite.scale.setTo(0.7);
