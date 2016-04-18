@@ -76,7 +76,7 @@
              "429":
                 {
                  "switchType":"rose",
-                 "triggerActivates":"[[39,1]]",
+                 "triggerActivates":"[[39,11]]",
                  "triggerType":"platform"
                 }
             },

@@ -21,11 +21,11 @@ Blob.prototype = {
 	chakraFullSprite: null,
 	chakraEmptySprite: null,
 	chakraCount: 0,
-	maxChakraCount: 1000,
+	maxChakraCount: 10,
 	chakraCropRect: null,
 
 	canJump: true,
-	jumpSpeed: 200,
+	jumpSpeed: 240,
 
 	eyeLeft: null,
 	eyeRight: null,
@@ -555,7 +555,9 @@ Blob.prototype = {
 	        	//if circle, float up
 	        	if(this.type == 'circle'){
 	        		waterFloatSpeed = -15;
-	        	}else{
+	        	}else if(this.type == 'triangle'){
+	        		waterFloatSpeed = -4;
+	        	}else if(this.type == 'square'){
 	        		waterFloatSpeed = -3;
 	        	}
 
@@ -566,17 +568,18 @@ Blob.prototype = {
 		       			}
 
 		        		//water sluggishnesss
-		        		point.body.velocity.x -= point.body.velocity.x/60;
+		        		point.body.velocity.x -= point.body.velocity.x/20;
+		        		point.body.velocity.y -= point.body.velocity.y/20;
 
 		        		var diffX = point.x - this.centerPoint.x;
 						var diffY = point.y - this.centerPoint.y;
 		        		if(this.type == 'triangle' && (index >= Math.floor(this.outerPoints.length/3) || index <= Math.floor(this.outerPoints.length/3)*2)){
 				    		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
-				    			point.body.velocity.y += -diffY*1.5;
-				    			point.body.velocity.x += -diffX*1.5;
+				    			point.body.velocity.y += -diffY*2.5;
+				    			point.body.velocity.x += -diffX*2.5;
 				    		}else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
-				    			point.body.velocity.y += diffY*.5;
-				    			point.body.velocity.x += diffX*.5;
+				    			point.body.velocity.y += diffY*.50;
+				    			point.body.velocity.x += diffX*.50;
 				    		}
 			    		}
 		        	}, this);
@@ -723,7 +726,7 @@ Blob.prototype = {
 			}, this);
 		}
 
-		return trueCount > 0;
+		return trueCount > 1;
 	}
 
 	

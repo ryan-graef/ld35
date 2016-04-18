@@ -1,0 +1,90 @@
+[opening]
+Senpai: Heya! Wake up, sleepy face.
+Round annoy: Ugghh what time is it?
+Senpai: It doesn't matter, you're late for training. We were supposed to meet up for transformation training today, remember?
+Round happy: Oh ya! Let's go!
+
+[m1 - remember your training]
+Senpai: Today I've set up a series of obstacles for you to learn how to do transform between our three basic natures. This world is a dangerous place, so pay close attention. 
+Round: Ya senpai!
+Senpai: Before we begin, remember your basic training.
+Senapi: <- -> directions, ^ to jump. In your current state, you float on water but are punctured by spikes easily. Go through the basic obstacles I've set up, and we'll meet at the end for the next step.
+Round annoyed: I will do my best!
+
+[m2 - second form - square]
+Senpai: Good job on getting past the basic obstacles. Now I'll teach you about nature transformations.
+Round happy: Ya!!!
+Senpai: Heya, listen close now. Before you can change natures, you need to learn about transformation energy.
+Round surprised: Transformation energy?
+Senpai: Yes, transformation energy. Every change you make requires transformation energy, of which you have a limited amount. 
+Senpai: Change too much, and you won't be able to get through the obstacles without restarting. You will need to use R to restart if you've used up all of your transformation energy.
+Senpai: Ok, now that you know the basics, transform into your second state using S or 2. 
+Square surprised: Senpai, I'm so heavy!
+Senpai: Yes, in this form, you'll be heavy but strong. You can now push blocks and remain unaffected by any spikes you encounter. Give it a try with this obstacle course.
+Square annoyed: I will do my best!
+
+[m3 - sinking and floating]
+Round happy: Senpai, I did it! And, I feel full again, but I thought I only had limited transformation energy?
+Senpai: Normally, once you've used all your energy you would have to wait until it was fully charged again, but for today's training I've setup special spots for you to recharge so we can train without stopping.
+Senpai: Now, let's put that "heaviness" to good use. Try sinking and pushing that block over that switch under water using your square form, they float back using your round form.
+Round annoyed: Ya senpai! I'll try it!
+
+[m4 - combo mode]
+Round happy: Ya senpai, I did it!
+Senpai: Good job.  Now work on managing your energy switching between forms to overcome the next obstacles I've setup for you.
+Round annoyed: I will do my best!
+
+[m5 - third form - triangle]
+Senpai: Heya! I see you're getting the hang of this. Let's try adding the final form now. Use D / 3 to change form.
+Triangle annoyed: Ughhhh I feel terrible in this form.
+Senpai: Heya, it's because you're still on land! In this form, the speciality is diving in water. You'll be able to glide quickly through water and maintain higher control than using your first two forms.
+Triangle happy: Wheeeeee!
+Senpai: ...
+Senpai: Ok, enough playing, we're training, remember? Try diving now using the V arrow.
+Triangle surprised: Ya Senpai!
+
+[m6 - inner dialogues]
+square annoyed: Ayyy, this is tough.
+triangle happy: CHA! No match for me though.
+Round surprised: Senpai! I'm... I'm hearing voices now?!
+Senpai: Ah, I see. Very interesting. That sometimes happens for strong form changers, it's a sign of the strength and wills of your forms. Listen carefully to themm, your instincts may guide you through these next obstacles.
+Square annoyed: Ayy, but do I have to keep pushing blocks around all the time?
+Triangle happy: I don't mind as long as I can swim, CHA!!!
+Square annoyed: ...
+Round annoyed: Ya, they're willful alright! I will do my best, Senpai.
+
+[m7 - water/spike mission]
+Triangle happy: Ohhh this mission looks like it'll suit me well, cha!
+Round happy: Senpai - 
+Senpai: Heya, just be careful, and remember to watch your transformation energy levels. Oh, and don't forgot - in your round and triangle forms, you're vulnerable to spikes. 
+Round annoyed: Ya Senpai!
+
+[m8 - learning on my own]
+Senpai: It looks like you've got the hang of this! Alright, I'll leave you to your own for these next two obstacles.
+Round annoyed: Ya Senpai! Alright forms, listen up! We'll need to be careful of changes and show Senpai what we've got!
+Square happy: Ayyy, just be careful little squirt.
+Triangle annoyed: CHA! Wouldn't want to get stuck!
+Round annoyed: Ya, I'll be fine! And don't call me squirt.
+Triangle happy: But I love a good squirt, cha!
+Sqaure anonyed: ...
+Round annoyed: ...
+
+[m9 - ?]
+Round happy: Alright, one more to go before we catch up with senpai. C'mon, let's move ya!
+Triangle annoyed: I'm getting tired, cha...
+Square surprised: Ayyy, one more you say? I can make one more.
+Round annoyed: One more before we meet up with senpai, ya. There's still more training!!
+Square annoyed: ayyyyyyyyyyyy
+Triangle happy: C'mon, we can do it, CHA!
+
+[m10 - ]
+Senpai: Alright, this is your last challenge for today. I want to see everything you've got in this last one!
+Round happy: Ya senpai, I'll show you all I've learned!!!
+Triangle happy: CHA!!!!
+Square annoyed: Ayyy...
+
+End screen:
+Senpai: Excellent job today on your training. Tomorrow, we'll come back and do it again!
+Round happy: Ya senpai, but can we get something to eat first, I'm staving!
+Triangle annoyed: ...chaaaaaaaa
+Square annoyed: ayyyyyyyy...

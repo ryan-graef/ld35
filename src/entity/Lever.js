@@ -66,7 +66,7 @@ Lever.prototype = {
 				game.physics.p2.enable(tempSprite);
 				tempSprite.body.dynamic = false;
 				tempSprite.body.setCollisionGroup(this.context.blockCollisionGroup);
-				tempSprite.body.collides([this.context.hero.blobCollisionGroup]);
+				tempSprite.body.collides([this.context.hero.blobCollisionGroup, this.context.blockCollisionGroup]);
 				this.context.platforms.push(tempSprite);
 			}
 		}, this);

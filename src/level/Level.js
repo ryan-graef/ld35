@@ -97,22 +97,9 @@ Level.prototype = {
 					tile.alpha = 1;
 				}
 
-				//spike
-				if(tile.index == 407){
-					tile.alpha = 0;
-
-					var tempSprite = game.add.sprite(tile.worldX, tile.worldY+20, 'spike');
-					game.physics.p2.enable(tempSprite, true);
-					tempSprite.body.setRectangle(tempSprite.width, tempSprite.height - 8, 0, 8);
-					tempSprite.body.dynamic = false;
-					tempSprite.body.setCollisionGroup(this.spikeCollisionGroup);
-					tempSprite.body.collides([this.hero.blobCollisionGroup]);
-					this.spikes.push(tempSprite);
-				}
-
 				//collision
 				if(tile.index == 432){
-					tile.alpha = 0;
+					//tile.alpha = 0;
 				}
 			}
 		}
@@ -128,6 +115,24 @@ Level.prototype = {
 					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY, game.cache.getBitmapData('checkpointTest'));
 					tempSprite.anchor.set(0.5);
 					this.checkpoints.push(tempSprite);
+				}
+
+								//spike
+				if(tile.index == 407 || tile.index == 406){
+					tile.alpha = 0;
+
+					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY+20, 'spike');
+					
+					game.physics.p2.enable(tempSprite);
+					if(tile.index == 406){
+						tempSprite.scale.y = -1;
+					}
+					
+					//tempSprite.body.setRectangle(tempSprite.width, tempSprite.height, 0,);
+					tempSprite.body.dynamic = false;
+					tempSprite.body.setCollisionGroup(this.spikeCollisionGroup);
+					tempSprite.body.collides([this.hero.blobCollisionGroup, this.blockCollisionGroup]);
+					this.spikes.push(tempSprite);
 				}
 			}
 		}
@@ -147,11 +152,11 @@ Level.prototype = {
 			tileBody.collides([this.hero.blobCollisionGroup, this.blockCollisionGroup, this.waterCollisionGroup]);
 		}
 
-        this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
+        //this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
 
         var furthestLeft = this.checkpoints[0];
         this.checkpoints.forEach(function(checkpoint){
-        	if(checkpoint.x > furthestLeft.x){
+        	if(checkpoint.x < furthestLeft.x){
         		furthestLeft = checkpoint;
         	}
         });
@@ -213,15 +218,15 @@ Level.prototype = {
 
 		if(this.textIndexCount > this.text.length){
 			this.hero.update();
-			this.mamaBlob.drawStuff();
-			this.mamaBlob.moveRight();
+			//this.mamaBlob.drawStuff();
+			//this.mamaBlob.moveRight();
 
 			this.textBoxSprite.bringToTop();
 			this.textBoxSprite.alpha = 0;
 			this.textBoxText.alpha = 0;
 		}else{
 			this.hero.drawStuff();
-			this.mamaBlob.drawStuff();
+			//this.mamaBlob.drawStuff();
 			this.textBoxSprite.alpha = 1;
 			this.textBoxText.alpha = 1;
 
