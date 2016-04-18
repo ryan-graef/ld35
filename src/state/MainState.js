@@ -10,6 +10,8 @@ var deathSfx;
 var switchSfx;
 var checkpointSfx;
 
+var deaths = 0;
+
 MainState.prototype = {
     level: null,
     cursorKeys: null,

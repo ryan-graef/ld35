@@ -24,6 +24,7 @@ ClosingState.prototype = {
     },
 
     create: function(){
+        EventTracking.logEvent('beat-game', 'Reset Count: '+deaths);
         game.camera.unfollow();
         game.camera.x = 0;
         game.camera.y = 0;

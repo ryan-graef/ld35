@@ -37,9 +37,11 @@ Level.prototype = {
 	},
 
 	_construct: function(){
+		deaths = 0;
 		this.layers = [];
 		this.water = [];
 		this.checkpoints = [];
+		this.checkpointCount = 1;
 		this.map = game.add.tilemap('test');
 		this.map.addTilesetImage('tileset', 'tileset');
 		this.layers.push(this.map.createLayer('collision'));

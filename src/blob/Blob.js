@@ -82,6 +82,7 @@ Blob.prototype = {
     		this.expression = "shocked";
             dieSfx.play();
     		this.removeSprings();
+    		EventTracking.logEvent('die', 'checkpoint: '+this.level.checkpointCount);
         }
 	},
 
@@ -302,6 +303,7 @@ Blob.prototype = {
 		this._createBlob();
 		this.alive = true;
 		this.expression = "normal";
+		deaths++;
 	},
 
 	resetLevel: function(){
@@ -524,6 +526,8 @@ Blob.prototype = {
 						this.level.lastCheckpoint = checkpoint;
                         checkpointSfx.play();
                         checkpoint.animations.play('active');
+                        this.level.checkpointCount++;
+                        EventTracking.logEvent('reached-checkpoint', this.level.checkpointCount);
 
                         if(checkpoint.isLast){
                             game.state.start('ClosingState');
