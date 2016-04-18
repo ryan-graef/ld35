@@ -45,7 +45,7 @@ Config = {
     ],
     sfx: [
         //{key: "SfxKey", filePath: "path/to/audiofile"}
-        {key: 'splash', filePath: 'res/sfx/splash2.wav'},
+        {key: 'splash', filePath: 'res/sfx/splash7.wav'},
         {key: 'transform', filePath: 'res/sfx/transform2.wav'},
         {key: 'jump', filePath: 'res/sfx/jump.wav'},
         {key: 'land', filePath: 'res/sfx/land.wav'},

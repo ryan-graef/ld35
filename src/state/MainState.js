@@ -21,11 +21,13 @@ MainState.prototype = {
     create: function(){
         //bgm = game.add.audio('bgm');
         bgmMuffled = game.add.audio('bmg-muffled');
-        bgm.loop = true;
-        bgmMuffled.loop = true;
-        bgm.play();
-        bgmMuffled.volume = 0;
-        bgmMuffled.play();
+        if(bgm.isPlaying){
+            bgm.loop = true;
+            bgmMuffled.loop = true;
+            bgm.play();
+            bgmMuffled.volume = 0;
+            bgmMuffled.play();
+        }
   
         //splashSfx = game.add.audio('splash');
         splashSfx.volume = 0.3;
