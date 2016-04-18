@@ -17,11 +17,11 @@ MenuState.prototype = {
         this.backgroundSprite.scale.setTo(0.7);
         this.homeScreenSprite = game.add.sprite(0, 0, 'home-screen');
 
-        this.gameTitleText = game.add.bitmapText(game.world.centerX, 150, 'font-75', Config.name, 70);
+        this.gameTitleText = game.add.bitmapText(game.width/2, 150, 'font-75', Config.name, 70);
         this.gameTitleText.anchor.setTo(0.5);
-        this.newButton = game.add.sprite(game.world.centerX - 100, 270, 'menu-button');
+        this.newButton = game.add.sprite(game.width/2 - 100, 270, 'menu-button');
         this.newButton.anchor.setTo(0.5);
-        this.newButtonText = game.add.bitmapText(game.world.centerX - 100, 270, 'font-45', 'Start', 50);
+        this.newButtonText = game.add.bitmapText(game.width/2 - 100, 270, 'font-45', 'Start', 50);
         this.newButtonText.anchor.setTo(0.5);
         this.newButtonText.inputEnabled = true;
         this.newButtonText.events.onInputDown.add(function(){
@@ -46,9 +46,9 @@ MenuState.prototype = {
         }, this);
         
         
-        this.helpButton = game.add.sprite(game.world.centerX + 100, 270, 'menu-button');
+        this.helpButton = game.add.sprite(game.width/2 + 100, 270, 'menu-button');
         this.helpButton.anchor.setTo(0.5);
-        this.helpButtonText = game.add.bitmapText(game.world.centerX + 100, 270, 'font-45', 'How To\n  Play', 40);
+        this.helpButtonText = game.add.bitmapText(game.width/2 + 100, 270, 'font-45', 'How To\n  Play', 40);
         this.helpButtonText.anchor.setTo(0.5);
         this.helpButtonText.inputEnabled = true;
         this.helpButtonText.events.onInputDown.add(function(){

@@ -104,6 +104,7 @@ OpeningState.prototype = {
     },
 
     create: function(){
+        game.camera.unfollow();
         game.camera.x = 0;
         game.camera.y = 0;
         this.textLineIndex = 0;

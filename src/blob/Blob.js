@@ -146,7 +146,7 @@ Blob.prototype = {
         	this.centerPoint.body.setCollisionGroup(this.level.mamaCollisionGroup);
         }
         //this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
-        if(this.type != 'mama'){
+        if(this.type != 'mama' && this.level){
         	game.camera.follow(this.centerPoint);
         }
 
