@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function(event){
 	game.state.add('InstructionState', new InstructionState());
 	game.state.add('MainState', new MainState());
     game.state.add('OpeningState', new OpeningState());
+    game.state.add('ClosingState', new OpeningState());
 
 	//kickoff the starting state, logo if not on localhost, mainstate otherwise
     if(isDev()){

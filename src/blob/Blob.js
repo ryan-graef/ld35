@@ -520,6 +520,10 @@ Blob.prototype = {
 						this.chakraCount = this.maxChakraCount;
 						this.level.lastCheckpoint = checkpoint;
                         checkpointSfx.play();
+
+                        if(checkpoint.isLast){
+                            game.state.start('ClosingState');
+                        }
 					}
 				}
 			}, this);

@@ -155,13 +155,17 @@ Level.prototype = {
         //this.mamaBlob = new Blob(game.width - 200, game.height -200, 'mama', this);
 
         var furthestLeft = this.checkpoints[0];
+        var furthestRight = this.checkpoints[0]
         this.checkpoints.forEach(function(checkpoint){
         	if(checkpoint.x < furthestLeft.x){
         		furthestLeft = checkpoint;
         	}
+        	if(checkpoint.x > furthestRight.x){
+        		furthestRight = checkpoint;
+        	}
         });
         this.lastCheckpoint = furthestLeft;
-
+        furthestRight.isLast = true;
         this.hero.reset();
     },
 
