@@ -1,6 +1,6 @@
 Config = {
     name: "Transform! The Three Natures",
-    version: "0.0.0",
+    version: "1.0.0",
     sprites: [
         //{key: "SpriteKey", imagePath: "path/to/image"}
         {key: 'tileset', imagePath: 'res/img/tileset.png'},
