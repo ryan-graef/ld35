@@ -44,7 +44,7 @@ Blob.prototype = {
 	timeBeforeNormal: 0,
 
 	_construct: function(){
-		this.textureBmd = game.add.bitmapData(this.surfaceArea, this.surfaceArea);
+		this.textureBmd = game.add.bitmapData(this.surfaceArea/4, this.surfaceArea/4);
 		this.textureBmd.context.strokeStyle = "#FFFFFF";
 		this.textureBmd.context.fillStyle = "#FFFFFF";
 		this.textureSprite = game.add.sprite(0, 0, this.textureBmd);
@@ -557,7 +557,7 @@ Blob.prototype = {
 	        	}else if(this.type == 'triangle'){
 	        		waterFloatSpeed = -4;
 	        	}else if(this.type == 'square'){
-	        		waterFloatSpeed = -3;
+	        		waterFloatSpeed = -1;
 	        	}
 
 		        	this.centerPoint.body.velocity.y += waterFloatSpeed;
@@ -626,11 +626,11 @@ Blob.prototype = {
 
 				for(var i = 0; i < 5; i++){
 					var drop;
-					if(this.dustPoofs.length <= 100){
+					if(this.dustPoofs.length <= 10){
 						drop = this.dustPoofs.create(x, y, 'dust-poof');
 					}else{
 						this.reuseIndex++;
-						drop = this.dustPoofs.getAt(this.reuseIndex%100);
+						drop = this.dustPoofs.getAt(this.reuseIndex%10);
 						drop.body.data.position[0] = x/-20;
 						drop.body.data.position[1] = y/-20;
 						drop.x = x;

@@ -41,8 +41,8 @@ Level.prototype = {
 		this.map.addTilesetImage('tileset', 'tileset');
 		this.layers.push(this.map.createLayer('collision'));
 		this.layers.push(this.map.createLayer('triggers'));
-		//this.layers.push(this.map.createLayer('main'));
-		//this.layers.push(this.map.createLayer('foreground'));
+		this.layers.push(this.map.createLayer('main'));
+		this.layers.push(this.map.createLayer('foreground'));
 		game.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 		this.map.setCollisionBetween(432, 432);
 		game.physics.p2.setBoundsToWorld();
@@ -143,7 +143,7 @@ Level.prototype = {
 			this.water.push(new Water(waterTileSet[0].worldX, waterTileSet[0].worldY, waterTileSet[1].worldX, waterTileSet[1].worldY, waterTileSet[2], this, waterTileSet[3]));
 		}, this);
 
-        var bodies = game.physics.p2.convertTilemap(this.map, this.layers[0], true, false);
+        var bodies = game.physics.p2.convertTilemap(this.map, this.layers[0]);
 		for(var i = 0; i < bodies.length; i++){
 			var tileBody = bodies[i];
 			//tileBody.setRectangle(32, 28, 16, 20, 0);

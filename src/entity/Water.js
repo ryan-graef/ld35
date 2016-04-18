@@ -77,9 +77,9 @@ Water.prototype = {
 			for(var i = 0; i < 10; i++){
 				var drop;
 
-				if(this.droplets.length >= 100){
+				if(this.droplets.length >= 50){
 					this.reuseIndex++;
-					drop = this.droplets.getAt(this.reuseIndex%100);
+					drop = this.droplets.getAt(this.reuseIndex%50);
 					drop.body.data.position[0] = x/-20;
 					drop.body.data.position[1] = y/-20;
 					drop.x = x;
