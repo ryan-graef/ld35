@@ -108,8 +108,8 @@ Blob.prototype = {
             game.physics.p2.enable(point);
             point.alpha = 0;
             point.anchor.setTo(0.5);
-            //point.body.onBeginContact.add(this.pointContactListener, this);
-            //point.body.onEndContact.add(this.pointEndContactListener, this);
+            point.body.onBeginContact.add(this.pointContactListener, this);
+            point.body.onEndContact.add(this.pointEndContactListener, this);
             if(this.level){
 	            if(this.type == 'mama'){
 	            	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
@@ -527,19 +527,19 @@ Blob.prototype = {
 
 			//input
 			if(this.chakraCount > 0){
-				if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.ONE, 10)){
+				if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 1) || game.input.keyboard.downDuration(Phaser.Keyboard.ONE, 1)){
 					this.type = "circle";
 					this._createSprings();
 					this.level.setBlockMass(500);
 					this.chakraCount--;
 					transformSfx.play();
-				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.TWO, 10)){
+				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 1) || game.input.keyboard.downDuration(Phaser.Keyboard.TWO, 1)){
 					this.type = "square";
 					this.level.setBlockMass(3);
 					this._createSprings();
 					this.chakraCount--;
 					transformSfx.play();
-				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 10) || game.input.keyboard.downDuration(Phaser.Keyboard.THREE, 10)){
+				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 1) || game.input.keyboard.downDuration(Phaser.Keyboard.THREE, 1)){
 					this.type = "triangle";
 					this.level.setBlockMass(500);
 					this._createSprings();
@@ -621,26 +621,26 @@ Blob.prototype = {
 		    	landSfx.play();
 		    	this.canPlayLand = false;
 		    	this.expression = "normal";
-		    	var x = this.x;
-				var y = this.y + 40;
+		  //   	var x = this.x;
+				// var y = this.y + 40;
 
-				for(var i = 0; i < 5; i++){
-					var drop;
-					if(this.dustPoofs.length <= 10){
-						drop = this.dustPoofs.create(x, y, 'dust-poof');
-					}else{
-						this.reuseIndex++;
-						drop = this.dustPoofs.getAt(this.reuseIndex%10);
-						drop.body.data.position[0] = x/-20;
-						drop.body.data.position[1] = y/-20;
-						drop.x = x;
-						drop.y = y;
-					}
-					drop.body.setCollisionGroup(this.level.waterCollisionGroup);
-					drop.body.collides([this.level.mapCollisionGroup]);
-					drop.body.velocity.y = game.rnd.integerInRange(-100, -50);
-					drop.body.velocity.x = 5*game.rnd.integerInRange(-50, 50)
-				}
+				// for(var i = 0; i < 5; i++){
+				// 	var drop;
+				// 	if(this.dustPoofs.length <= 10){
+				// 		drop = this.dustPoofs.create(x, y, 'dust-poof');
+				// 	}else{
+				// 		this.reuseIndex++;
+				// 		drop = this.dustPoofs.getAt(this.reuseIndex%10);
+				// 		drop.body.data.position[0] = x/-20;
+				// 		drop.body.data.position[1] = y/-20;
+				// 		drop.x = x;
+				// 		drop.y = y;
+				// 	}
+				// 	drop.body.setCollisionGroup(this.level.waterCollisionGroup);
+				// 	drop.body.collides([this.level.mapCollisionGroup]);
+				// 	drop.body.velocity.y = game.rnd.integerInRange(-100, -50);
+				// 	drop.body.velocity.x = 5*game.rnd.integerInRange(-50, 50)
+				// }
 		    }else if(!this.checkCanJump() && this.centerPoint.body.velocity.y > 0){
 		    	this.canPlayLand = true;
 		    }
@@ -651,10 +651,14 @@ Blob.prototype = {
 
 		    if(this.isInWater() && this.canPlaySplash){
 		    	this.canPlaySplash = false;
-		    	splashSfx.play();
+                if(!splashSfx.isPlaying){
+		    	 splashSfx.play();
+                }
 		    }else if(!this.isInWater() && !this.canPlaySplash){
 		    	this.canPlaySplash = true;
-		    	splashSfx.play();
+                if(!splashSfx.isPlaying){
+		    	 splashSfx.play();
+                }
 		    }
 
 	        if(this.type == 'triangle'){
@@ -688,6 +692,9 @@ Blob.prototype = {
 		        }
 	    	}
 	    }
+
+        this.chakraEmptySprite.bringToTop();
+        this.chakraCropSprite.bringToTop();
 	},
 
 	isInWater: function(){

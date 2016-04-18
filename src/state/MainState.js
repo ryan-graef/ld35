@@ -79,7 +79,7 @@ MainState.prototype = {
         this.level = new Level();
 
         this.waterSprite.bringToTop();
-        //this.level.layers[3].bringToTop();
+        this.level.layers[3].bringToTop();
         //this.level.mamaBlob.textureSprite.bringToTop();
         //this.level.mamaBlob.eyeLeft.bringToTop();
         //this.level.mamaBlob.eyeRight.bringToTop();
