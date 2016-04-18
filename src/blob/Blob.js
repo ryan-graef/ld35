@@ -108,8 +108,8 @@ Blob.prototype = {
             game.physics.p2.enable(point);
             point.alpha = 0;
             point.anchor.setTo(0.5);
-            point.body.onBeginContact.add(this.pointContactListener, this);
-            point.body.onEndContact.add(this.pointEndContactListener, this);
+            //point.body.onBeginContact.add(this.pointContactListener, this);
+            //point.body.onEndContact.add(this.pointEndContactListener, this);
             if(this.level){
 	            if(this.type == 'mama'){
 	            	point.body.setCollisionGroup(this.level.mamaCollisionGroup);
@@ -120,7 +120,7 @@ Blob.prototype = {
 	        }
 
             point.body.fixedRotation = true;
-            point.alpha = 0;
+            //point.alpha = 0;
 
             this.outerPoints.push(point);
         }
@@ -279,7 +279,6 @@ Blob.prototype = {
             }
 
             var point = [pointX, pointY];
-            //point.alpha = 0;
 
             idealPositions.push(point);
         }

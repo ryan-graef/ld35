@@ -41,8 +41,8 @@ Level.prototype = {
 		this.map.addTilesetImage('tileset', 'tileset');
 		this.layers.push(this.map.createLayer('collision'));
 		this.layers.push(this.map.createLayer('triggers'));
-		this.layers.push(this.map.createLayer('main'));
-		this.layers.push(this.map.createLayer('foreground'));
+		//this.layers.push(this.map.createLayer('main'));
+		//this.layers.push(this.map.createLayer('foreground'));
 		game.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 		this.map.setCollisionBetween(432, 432);
 		game.physics.p2.setBoundsToWorld();
@@ -205,12 +205,12 @@ Level.prototype = {
 
 	update: function(){
 		var bmd = game.cache.getBitmapData('water');
-		bmd.context.clearRect(0, 0, bmd.width, bmd.height);
+		game.cache.getBitmapData('water').context.clearRect(0, 0, bmd.width, bmd.height);
 		this.water.forEach(function(waterTil){
 			waterTil.update();
 		}, this);
-		this.textBoxSprite.bringToTop();
-		this.textBoxText.parent.bringToTop(this.textBoxText);
+		// this.textBoxSprite.bringToTop();
+		// this.textBoxText.parent.bringToTop(this.textBoxText);
 
 
 		//if(this.textIndexCount > this.text.length){
@@ -218,9 +218,9 @@ Level.prototype = {
 			//this.mamaBlob.drawStuff();
 			//this.mamaBlob.moveRight();
 
-			this.textBoxSprite.bringToTop();
-			this.textBoxSprite.alpha = 0;
-			this.textBoxText.alpha = 0;
+			// this.textBoxSprite.bringToTop();
+			// this.textBoxSprite.alpha = 0;
+			// this.textBoxText.alpha = 0;
 		// }else{
 		// 	this.hero.drawStuff();
 		// 	//this.mamaBlob.drawStuff();

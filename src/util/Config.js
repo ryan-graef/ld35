@@ -32,7 +32,7 @@ Config = {
     //tilemaps are assumed to be Tiled JSON.
     tileMaps: [
         //{key: "MapKey", jsonPath: "path/to/json"}
-        {key: "test", jsonPath: "res/lvl/world.json"},
+        {key: "test", jsonPath: "res/lvl/test.json"},
         {key: "title", jsonPath: "res/lvl/title.json"}
     ],
     fonts: [

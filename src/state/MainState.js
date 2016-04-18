@@ -51,11 +51,11 @@ MainState.prototype = {
         bmd.dirty = true;
         game.cache.addBitmapData('dot', bmd);
 
-        var bmdTextBoxTest = game.add.bitmapData(400, 100);
-        bmdTextBoxTest.context.fillStyle = "#FaaaaF";
-        bmdTextBoxTest.context.fillRect(0, 0, bmdTextBoxTest.width, bmdTextBoxTest.height);
-        bmdTextBoxTest.dirty = true;
-        game.cache.addBitmapData('textBoxTest', bmdTextBoxTest);
+        // var bmdTextBoxTest = game.add.bitmapData(400, 100);
+        // bmdTextBoxTest.context.fillStyle = "#FaaaaF";
+        // bmdTextBoxTest.context.fillRect(0, 0, bmdTextBoxTest.width, bmdTextBoxTest.height);
+        // bmdTextBoxTest.dirty = true;
+        // game.cache.addBitmapData('textBoxTest', bmdTextBoxTest);
 
         //just draw all the water on one bmd across the whole world
         var bmdWater = game.add.bitmapData(game.width, game.height);
@@ -63,12 +63,6 @@ MainState.prototype = {
         bmdWater.dirty = true;
         game.cache.addBitmapData('water', bmdWater);
         this.waterSprite = game.add.sprite(0, 0, bmdWater);
-
-        var bmdLeverTest = game.add.bitmapData(48, 64);
-        bmdLeverTest.context.fillStyle = "#FFFF00";
-        bmdLeverTest.context.fillRect(0, 0, 48, 64);
-        bmdLeverTest.dirty = true;
-        game.cache.addBitmapData('leverTest', bmdLeverTest);
 
         var bmdPlatformTest = game.add.bitmapData(32, 32);
         bmdPlatformTest.context.fillStyle = "#FFFFFF";
