@@ -676,13 +676,13 @@ Blob.prototype = {
 	    	}else{
 	    		if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
 	    				if(this.centerPoint.body.velocity.x < 200){
-		            		this.centerPoint.body.velocity.x += (this.type == 'square' ? 80 : 40);
+		            		this.centerPoint.body.velocity.x += (this.type == 'square' ? 50 : 40);
 	    				}
 						this.eyeLeft.scale.x = 1;
 						this.eyeRight.scale.x = 1;
 		        }else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
 		        		if(this.centerPoint.body.velocity.x > -200){
-		            		this.centerPoint.body.velocity.x -= (this.type == 'square' ? 80 : 40);
+		            		this.centerPoint.body.velocity.x -= (this.type == 'square' ? 50 : 40);
 		        		}
 		            	this.eyeLeft.scale.x = -1;
 						this.eyeRight.scale.x = -1;

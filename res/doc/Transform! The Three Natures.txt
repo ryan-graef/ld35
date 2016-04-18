@@ -1,7 +1,7 @@
 [opening]
 Senpai: Heya! Wake up, sleepy face.
 Round annoy: Ugghh what time is it?
-Senpai: It doesn't matter, you're late for training. We were supposed to meet up for transformation training today, remember?
+Senpai: It doesn't matter, you're late. We were supposed to meet up at the training course for transformation training today, remember?
 Round happy: Oh ya! Let's go!
 
 [m1 - remember your training]
@@ -37,7 +37,7 @@ Round annoyed: I will do my best!
 [m5 - third form - triangle]
 Senpai: Heya! I see you're getting the hang of this. Let's try adding the final form now. Use D / 3 to change form.
 Triangle annoyed: Ughhhh I feel terrible in this form.
-Senpai: Heya, it's because you're still on land! In this form, the speciality is diving in water. You'll be able to glide quickly through water and maintain higher control than using your first two forms.
+Senpai: Heya, it's because you're still on land! In this form, the speciality is diving in water. You'll be able to glide quickly through water and maintain higher control than using your first two forms. Just be careful, you're vulnerable to sharp objects in this form.
 Triangle happy: Wheeeeee!
 Senpai: ...
 Senpai: Ok, enough playing, we're training, remember? Try diving now using the V arrow.

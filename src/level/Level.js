@@ -16,7 +16,7 @@ Level.prototype = {
 
 	textBoxSprite: null,
 	textBoxText: null,
-	text: [""],
+	text: [],
 	textIndexCount: 0,
 
 
@@ -163,9 +163,6 @@ Level.prototype = {
         this.lastCheckpoint = furthestLeft;
 
         this.hero.reset();
-
-        this.text.push("2342342342 3424234234");
-        this.text.push("2342342342 234234234234");
     },
 
 	generateLevel: function(){
@@ -216,7 +213,7 @@ Level.prototype = {
 		this.textBoxText.parent.bringToTop(this.textBoxText);
 
 
-		if(this.textIndexCount > this.text.length){
+		//if(this.textIndexCount > this.text.length){
 			this.hero.update();
 			//this.mamaBlob.drawStuff();
 			//this.mamaBlob.moveRight();
@@ -224,20 +221,20 @@ Level.prototype = {
 			this.textBoxSprite.bringToTop();
 			this.textBoxSprite.alpha = 0;
 			this.textBoxText.alpha = 0;
-		}else{
-			this.hero.drawStuff();
-			//this.mamaBlob.drawStuff();
-			this.textBoxSprite.alpha = 1;
-			this.textBoxText.alpha = 1;
+		// }else{
+		// 	this.hero.drawStuff();
+		// 	//this.mamaBlob.drawStuff();
+		// 	this.textBoxSprite.alpha = 1;
+		// 	this.textBoxText.alpha = 1;
 
-			if(game.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)){
-				if(this.text[this.textIndexCount]){
-					this.setText(this.text[this.textIndexCount]);
-				}
+		// 	if(game.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)){
+		// 		if(this.text[this.textIndexCount]){
+		// 			this.setText(this.text[this.textIndexCount]);
+		// 		}
 
-				this.textIndexCount++;
-			}
-		}
+		// 		this.textIndexCount++;
+		// 	}
+		// }
 	},
 
 	setBlockMass: function(mass){
@@ -257,6 +254,10 @@ Level.prototype = {
 		this.textBoxText.alpha = 1;
 		this.textBoxSprite.alpha = 1;
 		this.textBoxText.setText(text);
+	},
+
+	advanceScript: function(){
+
 	},
 
 	parseScript: function(script){
