@@ -5,6 +5,7 @@ Config = {
         //{key: "SpriteKey", imagePath: "path/to/image"}
         {key: 'tileset', imagePath: 'res/img/tileset.png'},
         {key: 'crate', imagePath: 'res/img/crate.png'},
+        {key: 'platform', imagePath: 'res/img/platform.png'},
         {key: 'help-screen', imagePath: 'res/img/how-to-play.png'},
         {key: 'volume-on', imagePath: 'res/img/volume-on.png'},
         {key: 'volume-off', imagePath: 'res/img/volume-off.png'},
@@ -26,7 +27,8 @@ Config = {
     animSprites: [
         //{key: "SpriteKey", imagePath: "path/to/image", jsonPath: "path/to/json"}
         {key: 'blob-eyes', imagePath: "res/img/blob-eyes.png", jsonPath: "res/img/blob-eyes.json"},
-        {key: 'plates', imagePath: "res/img/plates.png", jsonPath: "res/img/plates.json"}
+        {key: 'plates', imagePath: "res/img/plates.png", jsonPath: "res/img/plates.json"},
+        {key: 'checkpoint', imagePath: "res/img/checkpoint.png", jsonPath: "res/img/checkpoint.json"}
 
     ],
     //tilemaps are assumed to be Tiled JSON.

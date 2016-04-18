@@ -67,18 +67,6 @@ MainState.prototype = {
         game.cache.addBitmapData('water', bmdWater);
         this.waterSprite = game.add.sprite(0, 0, bmdWater);
 
-        var bmdPlatformTest = game.add.bitmapData(32, 32);
-        bmdPlatformTest.context.fillStyle = "#FFFFFF";
-        bmdPlatformTest.context.fillRect(0, 0, 32, 32);
-        bmdPlatformTest.dirty = true;
-        game.cache.addBitmapData('platformTest', bmdPlatformTest);
-
-        var bmdCheckpointTest = game.add.bitmapData(32, 64);
-        bmdCheckpointTest.context.fillStyle = "#FFFFFF";
-        bmdCheckpointTest.context.fillRect(0, 0, 32, 64);
-        bmdCheckpointTest.dirty = true;
-        game.cache.addBitmapData('checkpointTest', bmdCheckpointTest);
-
         this.level = new Level();
 
         this.waterSprite.bringToTop();

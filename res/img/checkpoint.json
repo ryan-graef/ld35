@@ -1,0 +1,21 @@
+{"frames":[
+
+{
+	"filename": "inactive00",
+	"frame": {"x": 0, "y": 0, "w":32, "h":160},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":160},
+	"sourceSize": {"w":32, "h":160}
+},{
+	"filename": "active01",
+	"frame": {"x":32, "y": 0, "w":32, "h":160},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x": 0, "y": 0, "w":32, "h":160},
+	"sourceSize": {"w":32, "h":160}
+}
+
+
+
+]}

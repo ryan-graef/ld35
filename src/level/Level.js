@@ -37,6 +37,9 @@ Level.prototype = {
 	},
 
 	_construct: function(){
+		this.layers = [];
+		this.water = [];
+		this.checkpoints = [];
 		this.map = game.add.tilemap('test');
 		this.map.addTilesetImage('tileset', 'tileset');
 		this.layers.push(this.map.createLayer('collision'));
@@ -54,14 +57,14 @@ Level.prototype = {
 		this.spikeCollisionGroup = game.physics.p2.createCollisionGroup();
 		game.physics.p2.updateBoundsCollisionGroup();
 
-		this.textBoxSprite = game.add.sprite(game.width - 350, game.height - 125, game.cache.getBitmapData('textBoxTest'));
-		this.textBoxSprite.anchor.setTo(0.5);
-		this.textBoxSprite.fixedToCamera = true;
-		this.textBoxSprite.alpha = 0;
-		this.textBoxText = game.add.bitmapText(game.width - 325, game.height - 112, 'font-26', '', 22);
-		this.textBoxText.anchor.setTo(0.5);
-		this.textBoxText.fixedToCamera = true;
-		this.textBoxText.alpha = 0;
+		//this.textBoxSprite = game.add.sprite(game.width - 350, game.height - 125, game.cache.getBitmapData('textBoxTest'));
+		// this.textBoxSprite.anchor.setTo(0.5);
+		// this.textBoxSprite.fixedToCamera = true;
+		// this.textBoxSprite.alpha = 0;
+		// this.textBoxText = game.add.bitmapText(game.width - 325, game.height - 112, 'font-26', '', 22);
+		// this.textBoxText.anchor.setTo(0.5);
+		// this.textBoxText.fixedToCamera = true;
+		// this.textBoxText.alpha = 0;
 
 		var blobCircle = new Blob(750, 75, 'circle', this);
         this.hero = blobCircle;
@@ -112,8 +115,12 @@ Level.prototype = {
 				if(tile.properties.checkpoint){
 					tile.alpha = 0;
 					var meTile = tile;
-					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY, game.cache.getBitmapData('checkpointTest'));
-					tempSprite.anchor.set(0.5);
+					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY, 'checkpoint');
+					tempSprite.animations.add('inactive', [0]);
+					tempSprite.animations.add('active', [1]);
+					tempSprite.anchor.x = 0.5;
+					tempSprite.y -= tempSprite.height - 32;
+					tempSprite.animations.play('inactive');
 					this.checkpoints.push(tempSprite);
 				}
 
@@ -123,7 +130,7 @@ Level.prototype = {
 
 					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY+20, 'spike');
 					
-					game.physics.p2.enable(tempSprite);
+					game.physics.p2.enable(tempSprite, true);
 					if(tile.index == 406){
 						tempSprite.scale.y = -1;
 					}
@@ -165,6 +172,7 @@ Level.prototype = {
         	}
         });
         this.lastCheckpoint = furthestLeft;
+        this.lastCheckpoint.animations.play('active');
         furthestRight.isLast = true;
         this.hero.reset();
     },

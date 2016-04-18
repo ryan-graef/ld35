@@ -63,7 +63,7 @@ Lever.prototype = {
 			if(this.triggerType == 'block'){
 				this.context.blocks.push(new Block(activates[0]*32, activates[1]*32, this.context));
 			}else{
-				var tempSprite = game.add.sprite(activates[0]*32, activates[1]*32, game.cache.getBitmapData('platformTest'));
+				var tempSprite = game.add.sprite(activates[0]*32, activates[1]*32, 'platform');
 				game.physics.p2.enable(tempSprite);
 				tempSprite.body.dynamic = false;
 				tempSprite.body.setCollisionGroup(this.context.blockCollisionGroup);

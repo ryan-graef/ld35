@@ -104,6 +104,7 @@ OpeningState.prototype = {
     },
 
     create: function(){
+        this.textLineIndex = 0;
         var bmd = game.add.bitmapData(8, 8);
         bmd.context.fillStyle = '#FFFFFF';
         bmd.context.fillRect(0, 0, 8, 8);

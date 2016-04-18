@@ -77,7 +77,7 @@ Blob.prototype = {
 	},
 
 	die: function(){
-        if(this.isAlive){
+        if(this.alive){
     		this.alive = false;
     		this.expression = "shocked";
             dieSfx.play();
@@ -296,13 +296,15 @@ Blob.prototype = {
 		this.chakraCount = this.maxChakraCount;
 		if(this.level){
 			this.x = this.level.lastCheckpoint.x;
-			this.y = this.level.lastCheckpoint.y;
+			this.y = this.level.lastCheckpoint.y+100;
 		}
 		this.destroy();
 		this._createBlob();
 		this.alive = true;
 		this.expression = "normal";
+	},
 
+	resetLevel: function(){
 		this.level.generateLevel();
 	},
 
@@ -511,6 +513,7 @@ Blob.prototype = {
 		//reset
 		if(game.input.keyboard.downDuration(Phaser.Keyboard.R, 10)){
 			this.reset();
+			this.resetLevel();
 		}
 
 		if(this.alive && this.level){
@@ -520,6 +523,7 @@ Blob.prototype = {
 						this.chakraCount = this.maxChakraCount;
 						this.level.lastCheckpoint = checkpoint;
                         checkpointSfx.play();
+                        checkpoint.animations.play('active');
 
                         if(checkpoint.isLast){
                             game.state.start('ClosingState');
@@ -539,23 +543,29 @@ Blob.prototype = {
 			//input
 			if(this.chakraCount > 0){
 				if(game.input.keyboard.downDuration(Phaser.Keyboard.A, 1) || game.input.keyboard.downDuration(Phaser.Keyboard.ONE, 1)){
-					this.type = "circle";
-					this._createSprings();
-					this.level.setBlockMass(500);
-					this.chakraCount--;
-					transformSfx.play();
+					if(this.type != 'circle'){
+						this.type = "circle";
+						this._createSprings();
+						this.level.setBlockMass(500);
+						this.chakraCount--;
+						transformSfx.play();
+					}
 				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.S, 1) || game.input.keyboard.downDuration(Phaser.Keyboard.TWO, 1)){
-					this.type = "square";
-					this.level.setBlockMass(3);
-					this._createSprings();
-					this.chakraCount--;
-					transformSfx.play();
+					if(this.type != 'square'){
+						this.type = "square";
+						this.level.setBlockMass(3);
+						this._createSprings();
+						this.chakraCount--;
+						transformSfx.play();
+					}
 				}else if(game.input.keyboard.downDuration(Phaser.Keyboard.D, 1) || game.input.keyboard.downDuration(Phaser.Keyboard.THREE, 1)){
-					this.type = "triangle";
-					this.level.setBlockMass(500);
-					this._createSprings();
-					this.chakraCount--;
-					transformSfx.play();
+					if(this.type != 'triangle'){
+						this.type = "triangle";
+						this.level.setBlockMass(500);
+						this._createSprings();
+						this.chakraCount--;
+						transformSfx.play();
+					}
 				}
 			}
 
