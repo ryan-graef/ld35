@@ -23,7 +23,7 @@ InstructionState.prototype = {
     },
 
     update: function(){
-    	this.backgroundSprite.x += 0.1;
+    	this.backgroundSprite.x -= 0.1;
     },
 
     render: function(){

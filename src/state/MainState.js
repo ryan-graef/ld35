@@ -45,11 +45,11 @@ MainState.prototype = {
         game.physics.p2.setImpactEvents(true);
         game.time.advancedTiming = true;
         
-        var bmd = game.add.bitmapData(8, 8);
-        bmd.context.fillStyle = '#FFFFFF';
-        bmd.context.fillRect(0, 0, 8, 8);
-        bmd.dirty = true;
-        game.cache.addBitmapData('dot', bmd);
+        // var bmd = game.add.bitmapData(8, 8);
+        // bmd.context.fillStyle = '#FFFFFF';
+        // bmd.context.fillRect(0, 0, 8, 8);
+        // bmd.dirty = true;
+        // game.cache.addBitmapData('dot', bmd);
 
         // var bmdTextBoxTest = game.add.bitmapData(400, 100);
         // bmdTextBoxTest.context.fillStyle = "#FaaaaF";

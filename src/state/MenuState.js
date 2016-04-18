@@ -25,7 +25,7 @@ MenuState.prototype = {
         this.newButtonText.anchor.setTo(0.5);
         this.newButtonText.inputEnabled = true;
         this.newButtonText.events.onInputDown.add(function(){
-            game.state.start('MainState');
+            game.state.start('OpeningState');
         })
 
         this.soundOffSprite = game.add.sprite(game.world.width - 50, 50, 'volume-off');

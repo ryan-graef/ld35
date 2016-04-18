@@ -44,7 +44,7 @@ Blob.prototype = {
 	timeBeforeNormal: 0,
 
 	_construct: function(){
-		this.textureBmd = game.add.bitmapData(this.surfaceArea/4, this.surfaceArea/4);
+		this.textureBmd = game.add.bitmapData(this.surfaceArea, this.surfaceArea);
 		this.textureBmd.context.strokeStyle = "#FFFFFF";
 		this.textureBmd.context.fillStyle = "#FFFFFF";
 		this.textureSprite = game.add.sprite(0, 0, this.textureBmd);
@@ -96,8 +96,9 @@ Blob.prototype = {
 
 		
 
-        
-        game.physics.p2.updateBoundsCollisionGroup();
+        if(this.level){
+            game.physics.p2.updateBoundsCollisionGroup();
+        }
 
 		//arrange points into a circle
 		for(var i = 0; i < this.pointCount; i++){
@@ -134,6 +135,8 @@ Blob.prototype = {
         if(this.level){
         	this.centerPoint.body.setCollisionGroup(this.blobCollisionGroup);
        		this.centerPoint.body.collides([this.level.mapCollisionGroup, this.level.blockCollisionGroup]);
+        }else if(this.type == 'mama'){
+            this.centerPoint.body.dynamic = false;
         }
         this.centerPoint.body.fixedRotation = true;
         if(this.type == 'mama' && this.level){
@@ -471,6 +474,17 @@ Blob.prototype = {
 		this.textureBmd.context.closePath();
 		this.textureBmd.context.fill();
 		this.textureBmd.dirty = true;
+
+        if(this.type != "mama"){
+            this.eyeRight.animations.play(this.type+'-eye-'+this.expression);
+            this.eyeLeft.animations.play(this.type+'-eye-'+this.expression);
+
+            if(this.type == 'triangle' && this.expression == 'normal'){
+                this.eyeRight.scale.x = -1;
+            }else if(this.type != 'circle'){
+                this.eyeRight.scale.x = 1;
+            }
+        }
 	},
 
 	update: function(){
@@ -494,17 +508,6 @@ Blob.prototype = {
 		//reset
 		if(game.input.keyboard.downDuration(Phaser.Keyboard.R, 10)){
 			this.reset();
-		}
-
-		if(this.type != "mama"){
-			this.eyeRight.animations.play(this.type+'-eye-'+this.expression);
-			this.eyeLeft.animations.play(this.type+'-eye-'+this.expression);
-
-			if(this.type == 'triangle' && this.expression == 'normal'){
-				this.eyeRight.scale.x = -1;
-			}else if(this.type != 'circle'){
-				this.eyeRight.scale.x = 1;
-			}
 		}
 
 		if(this.alive && this.level){
@@ -693,8 +696,10 @@ Blob.prototype = {
 	    	}
 	    }
 
-        this.chakraEmptySprite.bringToTop();
-        this.chakraCropSprite.bringToTop();
+        if(this.level){
+            this.chakraEmptySprite.bringToTop();
+            this.chakraCropSprite.bringToTop();
+        }
 	},
 
 	isInWater: function(){
