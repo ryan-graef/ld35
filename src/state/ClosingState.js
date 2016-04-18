@@ -24,6 +24,8 @@ ClosingState.prototype = {
     },
 
     create: function(){
+        game.camera.x = 0;
+        game.camera.y = 0;
         this.textLineIndex = 0;
         var bmd = game.add.bitmapData(8, 8);
         bmd.context.fillStyle = '#FFFFFF';
@@ -60,7 +62,7 @@ ClosingState.prototype = {
 
         if(game.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, 1)){
             if(this.textLineIndex == this.textLines.length){ 
-                game.state.start('MainState');
+                game.state.start('MenuState');
             }else{
                 this.incrementText();
             }
