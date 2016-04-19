@@ -4,7 +4,7 @@ Water = function(startX, startY, endX, endY, height, level, solidSurface){
 	this.endX = endX;
 	this.endY = endY;
 	this.level = level;
-	this.height = height + 32;
+	this.height = height;
 	this.solidSurface = solidSurface
 
 	this._construct();
