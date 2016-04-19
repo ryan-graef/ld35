@@ -23,9 +23,10 @@ MenuState.prototype = {
         this.newButton.anchor.setTo(0.5);
         this.newButtonText = game.add.bitmapText(game.width/2 - 100, 270, 'font-45', 'Start', 50);
         this.newButtonText.anchor.setTo(0.5);
-        this.newButtonText.inputEnabled = true;
-        this.newButtonText.events.onInputDown.add(function(){
+        this.newButton.inputEnabled = true;
+        this.newButton.events.onInputDown.add(function(){
             game.state.start('OpeningState');
+            transformSfx.play();
         })
 
         this.soundOffSprite = game.add.sprite(game.world.width - 50, 50, 'volume-off');
@@ -50,9 +51,10 @@ MenuState.prototype = {
         this.helpButton.anchor.setTo(0.5);
         this.helpButtonText = game.add.bitmapText(game.width/2 + 100, 270, 'font-45', 'How To\n  Play', 40);
         this.helpButtonText.anchor.setTo(0.5);
-        this.helpButtonText.inputEnabled = true;
-        this.helpButtonText.events.onInputDown.add(function(){
+        this.helpButton.inputEnabled = true;
+        this.helpButton.events.onInputDown.add(function(){
             game.state.start('InstructionState');
+            transformSfx.play();
         });
 
         // this.circle = new Blob(75, 400, 'circle');

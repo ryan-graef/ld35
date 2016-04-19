@@ -132,7 +132,7 @@ Level.prototype = {
 
 					var tempSprite = game.add.sprite(tile.worldX+16, tile.worldY+20, 'spike');
 					
-					game.physics.p2.enable(tempSprite, true);
+					game.physics.p2.enable(tempSprite);
 					if(tile.index == 406){
 						tempSprite.scale.y = -1;
 					}

@@ -488,7 +488,7 @@ Blob.prototype = {
 
             if(this.type == 'triangle' && this.expression == 'normal'){
                 this.eyeRight.scale.x = -1;
-            }else if(this.type != 'circle'){
+            }else if(this.type == 'triangle'){
                 this.eyeRight.scale.x = 1;
             }
         }

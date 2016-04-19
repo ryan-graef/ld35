@@ -19,6 +19,7 @@ InstructionState.prototype = {
         this.backButton.inputEnabled = true;
         this.backButton.events.onInputDown.add(function(){
             game.state.start('MenuState');
+            transformSfx.play();
         });
     },
 
