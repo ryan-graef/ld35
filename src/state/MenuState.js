@@ -11,6 +11,8 @@ MenuState.prototype = {
             //bgmMuffled.play();
         }
 
+        game.input.keyboard.onDownCallback = null;
+
 
 
         this.backgroundSprite = game.add.sprite(-100, 0, 'background');

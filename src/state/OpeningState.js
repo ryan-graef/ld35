@@ -23,7 +23,7 @@ OpeningState.prototype = {
             },{
                 subject: 'senpai',
                 emotion: 'normal',
-                text: 'Hold on! Today I\'ve set up a series of obstacles for you to\nlearn how to do transform between our three basic natures.\nThis world is a dangerous place, so pay close attention.'
+                text: 'Hold on! Today I\'ve set up a series of obstacles for you to\nlearn how to transform between our three basic natures.\nThis world is a dangerous place, so pay close attention.'
             },{
                 subject: 'circle',
                 emotion: 'normal',

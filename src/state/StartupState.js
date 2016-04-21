@@ -58,18 +58,18 @@ StartupState.prototype = {
         if(this.frameCounter > 480){
 
             if(this.logoImage.alpha > 0){
-                this.logoImage.alpha -= 0.01;
+                this.logoImage.alpha = Math.max(0, this.logoImage.alpha - 0.01);
 
                 if(this.logoImage.alpha > 0.5){
                     this.logoEye.alpha = 1;
                     this.logoEye.animations.play('eye');
                 }
             }else if(this.frameCounter > 600){
-                this.logoEye.alpha -= 0.01;
+                this.logoEye.alpha = Math.max(0, this.logoEye.alpha - 0.01);
             }
 
             if(this.logoText.alpha > 0){
-                this.logoText.alpha -= 0.01;
+                this.logoText.alpha = Math.max(0, this.logoText.alpha - 0.01);
             }
         }
 
